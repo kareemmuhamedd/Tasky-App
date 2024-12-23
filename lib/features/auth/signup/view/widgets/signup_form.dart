@@ -22,7 +22,7 @@ class SignupForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Sign up',
             style: AppTextStyles.font24WeightBold,
           ),

@@ -9,11 +9,13 @@ class AppButton extends StatelessWidget {
     required this.appButtonWidget,
     required this.onPressed,
     this.appButtonColor = AppColors.primaryColor,
+    this.isInProgress = false,
   });
 
   final Widget appButtonWidget;
   final Color appButtonColor;
   final VoidCallback onPressed;
+  final bool isInProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,17 @@ class AppButton extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: Center(
-            child: appButtonWidget,
+            child: isInProgress
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      color: AppColors.whiteColor,
+                      strokeWidth: 2,
+                      strokeCap: StrokeCap.butt,
+                    ),
+                  )
+                : appButtonWidget,
           ),
         ),
       ),

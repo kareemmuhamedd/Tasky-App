@@ -4,12 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasky_app/app/routes/app_routes.dart';
+import 'package:tasky_app/features/auth/signup/repositories/signup_remote_repository.dart';
 import 'package:tasky_app/features/auth/signup/view/widgets/signup_form.dart';
+import 'package:tasky_app/shared/networking/dio_factory.dart';
 
 import '../../../../../shared/assets/images.dart';
 import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/typography/app_text_styles.dart';
 import '../../../../../shared/widgets/app_button.dart';
+import '../../model/signup_model.dart';
 import '../../viewmodel/signup_cubit/signup_cubit.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -18,7 +21,11 @@ class SignupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignupCubit(),
+      create: (context) => SignupCubit(
+        signupRemoteRepository: SignupRemoteRepository(
+          dio: DioFactory.getDio(),
+        ),
+      ),
       child: const SignupView(),
     );
   }
@@ -37,7 +44,10 @@ class SignupView extends StatelessWidget {
             SizedBox(
               height: 300.h,
               width: double.infinity,
-              child: Image.asset(AppImages.artImage,fit: BoxFit.cover,),
+              child: Image.asset(
+                AppImages.artImage,
+                fit: BoxFit.cover,
+              ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.5.w),
@@ -48,12 +58,31 @@ class SignupView extends StatelessWidget {
                   const SizedBox(
                     height: 24,
                   ),
-                  AppButton(
-                    onPressed: () {},
-                    appButtonWidget: const Text(
-                      'Sign up',
-                      style: AppTextStyles.font16WeightBold,
-                    ),
+                  BlocBuilder<SignupCubit, SignupState>(
+                    builder: (context, state) {
+                      final isLoading =
+                          state.status == SignupSubmissionStatus.loading;
+                      return AppButton(
+                        isInProgress: isLoading,
+                        onPressed: () {
+                          context.read<SignupCubit>().onSubmitted(
+                                data: SignupModel(
+                                  phone: state.phoneNumber,
+                                  password: state.password,
+                                  displayName: state.name,
+                                  experienceYears:
+                                      int.parse(state.yearsOfExperience),
+                                  address: state.address,
+                                  level: state.experienceLevel,
+                                ),
+                              );
+                        },
+                        appButtonWidget: const Text(
+                          'Sign up',
+                          style: AppTextStyles.font16WeightBold,
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(
                     height: 24,
@@ -81,7 +110,9 @@ class SignupView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12,)
+                  const SizedBox(
+                    height: 12,
+                  )
                 ],
               ),
             )

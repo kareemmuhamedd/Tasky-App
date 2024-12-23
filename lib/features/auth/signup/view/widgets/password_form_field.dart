@@ -5,8 +5,33 @@ import 'package:tasky_app/features/auth/signup/viewmodel/signup_cubit/signup_cub
 import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/widgets/custom_text_form_field.dart';
 
-class PasswordFormField extends StatelessWidget {
+class PasswordFormField extends StatefulWidget {
   const PasswordFormField({super.key});
+
+  @override
+  State<PasswordFormField> createState() => _PasswordFormFieldState();
+}
+
+class _PasswordFormFieldState extends State<PasswordFormField> {
+  late TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordController = TextEditingController();
+    _passwordController.addListener(() {
+      if (_passwordController.text.isNotEmpty) {
+        context.read<SignupCubit>().onPasswordChanged(_passwordController.text);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +51,7 @@ class PasswordFormField extends StatelessWidget {
         ),
       ),
       obscureText: !passwordVisible,
+      controller: _passwordController,
     );
   }
 }

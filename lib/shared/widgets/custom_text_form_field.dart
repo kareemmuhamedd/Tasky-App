@@ -17,6 +17,7 @@ class CustomTextFormField extends StatelessWidget {
   final TextStyle? hintStyle;
   final bool? readOnly;
   final void Function()? onTap;
+  final FocusNode? focusNode;
 
   const CustomTextFormField({
     super.key,
@@ -33,6 +34,7 @@ class CustomTextFormField extends StatelessWidget {
     this.hintStyle,
     this.readOnly = false,
     this.onTap,
+    this.focusNode,
   });
 
   @override
@@ -40,6 +42,7 @@ class CustomTextFormField extends StatelessWidget {
     return SizedBox(
       height: 50,
       child: TextFormField(
+        focusNode: focusNode,
         onTap: onTap,
         controller: controller,
         validator: validator,

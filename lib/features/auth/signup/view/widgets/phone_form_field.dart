@@ -1,5 +1,7 @@
 import 'package:country_code_picker_plus/country_code_picker_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tasky_app/features/auth/signup/viewmodel/signup_cubit/signup_cubit.dart';
 
 import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/typography/app_text_styles.dart';
@@ -16,6 +18,26 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
   Country? _selectedCountry;
 
   bool _isPhoneNumberValid = false;
+  late TextEditingController _phoneNumberController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _phoneNumberController = TextEditingController();
+    _phoneNumberController.addListener(() {
+      if (_phoneNumberController.text.isNotEmpty) {
+        context.read<SignupCubit>().onPhoneChanged(_selectedCountry!.dialCode+_phoneNumberController.text);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+
+    super.dispose();
+  }
+
 
   Future<void> _validatePhoneNumber(String value, String countryCode) async {
     try {
@@ -53,6 +75,7 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
         insetPadding: EdgeInsets.zero,
         textStyle: AppTextStyles.font17WeightBold,
       ),
+      controller: _phoneNumberController,
     );
   }
 }

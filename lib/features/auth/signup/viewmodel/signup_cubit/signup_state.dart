@@ -39,6 +39,10 @@ class SignupState {
     required this.showPassword,
     required this.phoneNumber,
     required this.password,
+    required this.name,
+    required this.yearsOfExperience,
+    required this.experienceLevel,
+    required this.address,
   });
 
   /// Initial Signup state.
@@ -49,10 +53,18 @@ class SignupState {
           showPassword: false,
           phoneNumber: '',
           password: '',
+          name: '',
+          yearsOfExperience: '',
+          experienceLevel: '',
+          address: '',
         );
 
   final SignupSubmissionStatus status;
+  final String name;
   final String phoneNumber;
+  final String yearsOfExperience;
+  final String experienceLevel;
+  final String address;
   final String password;
   final bool showPassword;
   final String message;
@@ -63,6 +75,10 @@ class SignupState {
     bool? showPassword,
     String? phoneNumber,
     String? password,
+    String? name,
+    String? yearsOfExperience,
+    String? experienceLevel,
+    String? address,
   }) {
     return SignupState._(
       status: status ?? this.status,
@@ -70,6 +86,10 @@ class SignupState {
       showPassword: showPassword ?? this.showPassword,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       password: password ?? this.password,
+      name: name ?? this.name,
+      yearsOfExperience: yearsOfExperience ?? this.yearsOfExperience,
+      experienceLevel: experienceLevel ?? this.experienceLevel,
+      address: address ?? this.address,
     );
   }
 }

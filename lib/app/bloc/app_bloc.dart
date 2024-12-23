@@ -16,18 +16,28 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   /// Handles the [CheckOnboardingStatus] event.
   Future<void> _onCheckOnboardingStatus(
-    CheckOnboardingStatus event,
-    Emitter<AppState> emit,
-  ) async {
-    final isOnboardingCompleted =
-        SharedPrefHelper.instance.getBool('onboarding_completed') ?? false;
+      CheckOnboardingStatus event,
+      Emitter<AppState> emit,
+      ) async {
+    final accessToken = SharedPrefHelper.instance.getString('access_token');
+    final refreshToken = SharedPrefHelper.instance.getString('refresh_token');
 
-    if (isOnboardingCompleted) {
-      emit(state.copyWith(status: AppStatus.unauthenticated));
+    if (accessToken != null && refreshToken != null) {
+      // Tokens exist, user is authenticated
+      emit(state.copyWith(status: AppStatus.authenticated));
     } else {
-      emit(state.copyWith(status: AppStatus.onboardingRequired));
+      // No tokens, user needs to log in
+      final isOnboardingCompleted =
+          SharedPrefHelper.instance.getBool('onboarding_completed') ?? false;
+
+      if (isOnboardingCompleted) {
+        emit(state.copyWith(status: AppStatus.unauthenticated));
+      } else {
+        emit(state.copyWith(status: AppStatus.onboardingRequired));
+      }
     }
   }
+
 
   /// Handles the [CompleteOnboarding] event.
   Future<void> _onCompleteOnboarding(

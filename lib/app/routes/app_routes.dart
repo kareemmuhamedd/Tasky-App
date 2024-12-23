@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasky_app/features/auth/login/view/screens/login_screen.dart';
 import 'package:tasky_app/features/auth/signup/view/screens/signup_screen.dart';
+import 'package:tasky_app/features/home/view/screens/home_screen.dart';
 import 'package:tasky_app/features/onboarding/onboarding_screen.dart';
 
 import '../bloc/app_bloc.dart';
@@ -10,6 +11,7 @@ abstract class AppRoutesPaths {
   static const String kOnboarding = '/onboarding-screen';
   static const String kLoginScreen = '/login-screen';
   static const String kSignupScreen = '/signup-screen';
+  static const String kHomeScreen = '/home-screen';
 }
 
 class AppRoutes {
@@ -37,9 +39,19 @@ class AppRoutes {
           name: AppRoutesPaths.kSignupScreen,
           builder: (context, state) => const SignupScreen(),
         ),
+        GoRoute(
+          path: AppRoutesPaths.kHomeScreen,
+          name: AppRoutesPaths.kHomeScreen,
+          builder: (context, state) => const HomeScreen(),
+        ),
       ],
       redirect: (context, state) {
         final appStatus = appBloc.state.status;
+
+        if (appStatus == AppStatus.authenticated) {
+          return AppRoutesPaths.kHomeScreen;
+        }
+
         final isLoginScreen =
             state.uri.toString() == AppRoutesPaths.kLoginScreen;
         final isSignupScreen =
