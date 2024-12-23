@@ -27,17 +27,18 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
     _phoneNumberController = TextEditingController();
     _phoneNumberController.addListener(() {
       if (_phoneNumberController.text.isNotEmpty) {
-        context.read<SignupCubit>().onPhoneChanged(_selectedCountry!.dialCode+_phoneNumberController.text);
+        context.read<SignupCubit>().onPhoneChanged(
+              _selectedCountry!.dialCode + _phoneNumberController.text,
+            );
       }
     });
   }
 
   @override
   void dispose() {
-
+    _phoneNumberController.dispose();
     super.dispose();
   }
-
 
   Future<void> _validatePhoneNumber(String value, String countryCode) async {
     try {

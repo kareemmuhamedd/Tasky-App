@@ -18,7 +18,7 @@ class LoginForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Login',
             style: AppTextStyles.font24WeightBold,
           ),

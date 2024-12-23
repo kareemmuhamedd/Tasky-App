@@ -28,7 +28,7 @@ class _PasswordFormFieldState extends State<PasswordFormField> {
 
   @override
   void dispose() {
-
+    _passwordController.dispose();
     super.dispose();
   }
 
