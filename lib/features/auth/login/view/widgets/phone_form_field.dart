@@ -1,9 +1,11 @@
 import 'package:country_code_picker_plus/country_code_picker_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/typography/app_text_styles.dart';
 import '../../../../../shared/widgets/custom_text_form_field.dart';
+import '../../viewmodel/login_cubit/login_cubit.dart';
 
 class PhoneFormField extends StatefulWidget {
   const PhoneFormField({super.key});
@@ -16,6 +18,27 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
   Country? _selectedCountry;
 
   bool _isPhoneNumberValid = false;
+
+  late TextEditingController _phoneNumberController;
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneNumberController = TextEditingController();
+    _phoneNumberController.addListener(() {
+      if (_phoneNumberController.text.isNotEmpty) {
+        context.read<LoginCubit>().onPhoneNumberChanged(
+              _selectedCountry!.dialCode + _phoneNumberController.text,
+            );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _phoneNumberController.dispose();
+    super.dispose();
+  }
 
   Future<void> _validatePhoneNumber(String value, String countryCode) async {
     try {
@@ -53,6 +76,7 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
         insetPadding: EdgeInsets.zero,
         textStyle: AppTextStyles.font17WeightBold,
       ),
+      controller: _phoneNumberController,
     );
   }
 }

@@ -33,6 +33,7 @@ class _YearsOfExperienceFormFieldState
 
   @override
   void dispose() {
+    _yearsOfExperienceController.dispose();
     super.dispose();
   }
 

@@ -4,12 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasky_app/app/routes/app_routes.dart';
+import 'package:tasky_app/features/auth/login/model/login_model.dart';
 import 'package:tasky_app/features/auth/login/view/widgets/login_form.dart';
 import 'package:tasky_app/shared/theme/app_colors.dart';
 import 'package:tasky_app/shared/widgets/app_button.dart';
 
 import '../../../../../shared/assets/images.dart';
+import '../../../../../shared/networking/dio_factory.dart';
 import '../../../../../shared/typography/app_text_styles.dart';
+import '../../repositories/login_remote_repository.dart';
 import '../../viewmodel/login_cubit/login_cubit.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -18,7 +21,11 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LoginCubit(),
+      create: (context) => LoginCubit(
+        loginRemoteRepository: LoginRemoteRepository(
+          dio: DioFactory.getDio(),
+        ),
+      ),
       child: const LoginView(),
     );
   }
@@ -49,12 +56,26 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(
                     height: 24,
                   ),
-                  AppButton(
-                    onPressed: () {},
-                    appButtonWidget: const Text(
-                      'Sign in',
-                      style: AppTextStyles.font16WeightBold,
-                    ),
+                  BlocBuilder<LoginCubit, LoginState>(
+                    builder: (context, state) {
+                      final isLoading =
+                          state.status == LogInSubmissionStatus.loading;
+                      return AppButton(
+                        isInProgress: isLoading,
+                        onPressed: () {
+                          context.read<LoginCubit>().onSubmitted(
+                                data: LoginModel(
+                                  phone: state.phoneNumber,
+                                  password: state.password,
+                                ),
+                              );
+                        },
+                        appButtonWidget: const Text(
+                          'Sign in',
+                          style: AppTextStyles.font16WeightBold,
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(
                     height: 24,
