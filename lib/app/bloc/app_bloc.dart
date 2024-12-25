@@ -8,10 +8,16 @@ part 'app_event.dart';
 part 'app_state.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
-  AppBloc() : super(const AppState.onboardingRequired()) {
+  AppBloc() : super(const AppState.initial()) {
     on<CheckOnboardingStatus>(_onCheckOnboardingStatus);
     on<CompleteOnboarding>(_onCompleteOnboarding);
     on<AppLogoutRequested>(_onLogoutRequested);
+
+    // Trigger the initial state resolution
+    add(const CheckOnboardingStatus());
+  }
+  Future<void> initialize() async {
+    add(const CheckOnboardingStatus());
   }
 
   /// Handles the [CheckOnboardingStatus] event.
@@ -23,10 +29,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     final refreshToken = SharedPrefHelper.instance.getString('refresh_token');
 
     if (accessToken != null && refreshToken != null) {
-      // Tokens exist, user is authenticated
       emit(state.copyWith(status: AppStatus.authenticated));
     } else {
-      // No tokens, user needs to log in
       final isOnboardingCompleted =
           SharedPrefHelper.instance.getBool('onboarding_completed') ?? false;
 

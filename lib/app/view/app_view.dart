@@ -10,17 +10,18 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final routerConfig = AppRoutes.router(context.read<AppBloc>());
+    final appBloc = context.read<AppBloc>();
+
     return ScreenUtilInit(
       designSize: const Size(375, 812),
-      child: MaterialApp.router(
+      builder: (context, child) => MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'Tasky App',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        routerConfig: routerConfig,
+        routerConfig: AppRoutes.router(appBloc),
       ),
     );
   }

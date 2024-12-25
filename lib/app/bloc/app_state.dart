@@ -4,52 +4,39 @@ part of 'app_bloc.dart';
 /// the application is started.
 
 enum AppStatus {
+  /// The application is in an initial state. Route resolution is deferred.
+  initial,
+
   /// The user is authenticated. Show `MainPage`.
   authenticated,
 
-  /// The user is not authenticated or the authentication status is unknown.
-  /// Show `AuthPage`.
+  /// The user is not authenticated. Show `AuthPage`.
   unauthenticated,
 
-  /// The authentication status is unknown. Show `SplashPage`.
+  /// The user needs to complete onboarding. Show `OnboardingPage`.
   onboardingRequired,
 }
 
+
 class AppState extends Equatable {
   const AppState({
-    required this.status,
-    //this.user = User.anonymous,
+    this.status = AppStatus.initial, // Default to the initial state
   });
-
-  // const AppState.authenticated(User user)
-  //     : this(status: AppStatus.authenticated, user: user);
-
-  const AppState.onboardingRequired()
-      : this(status: AppStatus.onboardingRequired);
-
-  // const AppState.unauthenticated()
-  //     : this(
-  //         status: AppStatus.unauthenticated,
-  //         user: User.anonymous,
-  //       );
 
   final AppStatus status;
 
-  //final User user;
+  const AppState.initial() : this(status: AppStatus.initial);
+
+  const AppState.onboardingRequired() : this(status: AppStatus.onboardingRequired);
 
   AppState copyWith({
-    // User? user,
     AppStatus? status,
   }) {
     return AppState(
-      // user: user ?? this.user,
       status: status ?? this.status,
     );
   }
 
   @override
-  List<Object> get props => [
-        status,
-        //user,
-      ];
+  List<Object> get props => [status];
 }

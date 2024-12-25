@@ -20,7 +20,7 @@ class LoginRemoteRepository {
         '${ApiConstants.baseUrl}/auth/login',
         data: data.toMap(),
       );
-      if (response.statusCode != 200) {
+      if (response.statusCode != 201) {
         return Left(Failure(message: 'Something went wrong.'));
       }
       return Right(LoginResponseModel.fromMap(response.data));

@@ -12,11 +12,10 @@ class App extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         final appBloc = AppBloc();
-        appBloc.add(const CheckOnboardingStatus());
+        appBloc.initialize();
         return appBloc;
       },
       child: const AppView(),
     );
   }
 }
-
