@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tasky_app/app/bloc/app_bloc.dart';
 import 'package:tasky_app/app/routes/app_routes.dart';
 import 'package:tasky_app/features/auth/login/model/login_model.dart';
 import 'package:tasky_app/features/auth/login/view/widgets/login_form.dart';
@@ -56,7 +57,14 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(
                     height: 24,
                   ),
-                  BlocBuilder<LoginCubit, LoginState>(
+                  BlocConsumer<LoginCubit, LoginState>(
+                    listener: (context, state) {
+                      if (state.status == LogInSubmissionStatus.success) {
+                        context
+                            .read<AppBloc>()
+                            .add(const CheckOnboardingStatus());
+                      }
+                    },
                     builder: (context, state) {
                       final isLoading =
                           state.status == LogInSubmissionStatus.loading;

@@ -35,9 +35,21 @@ abstract class AppTextStyles {
     fontWeight: AppFontWeight.bold,
     color: AppColors.whiteColor,
   );
+  static const TextStyle font16WeightRegular = TextStyle(
+    fontSize: 16,
+    fontWeight: AppFontWeight.regular,
+  );
   static const TextStyle font14WeightBold = TextStyle(
     fontSize: 14,
     fontWeight: AppFontWeight.bold,
     color: AppColors.textGreyColor2,
+  );
+  static const TextStyle font12WeightMedium = TextStyle(
+    fontSize: 12,
+    fontWeight: AppFontWeight.medium,
+  );
+  static const TextStyle font12WeightRegular = TextStyle(
+    fontSize: 12,
+    fontWeight: AppFontWeight.regular,
   );
 }

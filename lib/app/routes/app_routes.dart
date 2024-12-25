@@ -4,6 +4,7 @@ import 'package:tasky_app/features/auth/login/view/screens/login_screen.dart';
 import 'package:tasky_app/features/auth/signup/view/screens/signup_screen.dart';
 import 'package:tasky_app/features/home/view/screens/home_screen.dart';
 import 'package:tasky_app/features/onboarding/onboarding_screen.dart';
+import 'package:tasky_app/features/splash/view/splash_screen.dart';
 
 import '../bloc/app_bloc.dart';
 
@@ -12,6 +13,7 @@ abstract class AppRoutesPaths {
   static const String kLoginScreen = '/login-screen';
   static const String kSignupScreen = '/signup-screen';
   static const String kHomeScreen = '/home-screen';
+  static const String kSplashScreen = '/splash-screen';
 }
 
 class AppRoutes {
@@ -19,7 +21,7 @@ class AppRoutes {
     final notifier = GoRouterNotifier(appBloc);
 
     return GoRouter(
-      initialLocation: AppRoutesPaths.kOnboarding,
+      initialLocation: AppRoutesPaths.kHomeScreen,
       routes: [
         // Onboarding Route
         GoRoute(
@@ -39,29 +41,40 @@ class AppRoutes {
           name: AppRoutesPaths.kSignupScreen,
           builder: (context, state) => const SignupScreen(),
         ),
+        // Home Route
         GoRoute(
           path: AppRoutesPaths.kHomeScreen,
           name: AppRoutesPaths.kHomeScreen,
           builder: (context, state) => const HomeScreen(),
         ),
+        GoRoute(
+          path: AppRoutesPaths.kSplashScreen,
+          name: AppRoutesPaths.kSplashScreen,
+          builder: (context, state) => const SplashScreen(),
+        ),
       ],
       redirect: (context, state) {
         final appStatus = appBloc.state.status;
+
+        // Wait for initialization to complete
+        if (appStatus == AppStatus.initial) {
+          return AppRoutesPaths.kSplashScreen;
+        }
 
         if (appStatus == AppStatus.authenticated) {
           return AppRoutesPaths.kHomeScreen;
         }
 
-        final isLoginScreen =
-            state.uri.toString() == AppRoutesPaths.kLoginScreen;
-        final isSignupScreen =
-            state.uri.toString() == AppRoutesPaths.kSignupScreen;
-
         if (appStatus == AppStatus.unauthenticated &&
-            !isLoginScreen &&
-            !isSignupScreen) {
+            state.uri.toString() != AppRoutesPaths.kLoginScreen) {
           return AppRoutesPaths.kLoginScreen;
         }
+
+        if (appStatus == AppStatus.onboardingRequired &&
+            state.uri.toString() != AppRoutesPaths.kOnboarding) {
+          return AppRoutesPaths.kOnboarding;
+        }
+
         return null;
       },
       refreshListenable: notifier,
@@ -73,6 +86,8 @@ class GoRouterNotifier extends ChangeNotifier {
   final AppBloc appBloc;
 
   GoRouterNotifier(this.appBloc) {
-    appBloc.stream.listen((_) => notifyListeners());
+    appBloc.stream.listen((state) {
+      notifyListeners();
+    });
   }
 }

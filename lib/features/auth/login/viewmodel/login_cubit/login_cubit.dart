@@ -39,6 +39,7 @@ class LoginCubit extends Cubit<LoginState> {
             .setString('access_token', response.access_token);
         await SharedPrefHelper.instance
             .setString('refresh_token', response.refresh_token);
+
         emit(state.copyWith(
           status: LogInSubmissionStatus.success,
         ));
