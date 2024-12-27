@@ -52,4 +52,9 @@ abstract class AppTextStyles {
     fontSize: 12,
     fontWeight: AppFontWeight.regular,
   );
+  static const TextStyle font9WeightRegular = TextStyle(
+    fontSize: 9,
+    fontWeight: AppFontWeight.regular,
+    color: AppColors.textGreyColor,
+  );
 }

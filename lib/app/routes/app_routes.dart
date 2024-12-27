@@ -6,6 +6,7 @@ import 'package:tasky_app/features/home/view/screens/home_screen.dart';
 import 'package:tasky_app/features/onboarding/onboarding_screen.dart';
 import 'package:tasky_app/features/splash/view/splash_screen.dart';
 
+import '../../features/task_details/view/screens/task_details_screen.dart';
 import '../bloc/app_bloc.dart';
 
 abstract class AppRoutesPaths {
@@ -14,6 +15,7 @@ abstract class AppRoutesPaths {
   static const String kSignupScreen = '/signup-screen';
   static const String kHomeScreen = '/home-screen';
   static const String kSplashScreen = '/splash-screen';
+  static const String kTaskDetailsScreen = '/task-details-screen';
 }
 
 class AppRoutes {
@@ -23,6 +25,12 @@ class AppRoutes {
     return GoRouter(
       initialLocation: AppRoutesPaths.kHomeScreen,
       routes: [
+        // Splash Route
+        GoRoute(
+          path: AppRoutesPaths.kSplashScreen,
+          name: AppRoutesPaths.kSplashScreen,
+          builder: (context, state) => const SplashScreen(),
+        ),
         // Onboarding Route
         GoRoute(
           path: AppRoutesPaths.kOnboarding,
@@ -45,12 +53,13 @@ class AppRoutes {
         GoRoute(
           path: AppRoutesPaths.kHomeScreen,
           name: AppRoutesPaths.kHomeScreen,
-          builder: (context, state) => const HomeScreen(),
+          builder: (context, state) => const TaskDetailsScreen(),
         ),
+        // Task Details Route
         GoRoute(
-          path: AppRoutesPaths.kSplashScreen,
-          name: AppRoutesPaths.kSplashScreen,
-          builder: (context, state) => const SplashScreen(),
+          path: AppRoutesPaths.kTaskDetailsScreen,
+          name: AppRoutesPaths.kTaskDetailsScreen,
+          builder: (context, state) => const TaskDetailsScreen(),
         ),
       ],
       redirect: (context, state) {
