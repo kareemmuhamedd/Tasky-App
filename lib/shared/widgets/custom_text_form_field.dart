@@ -18,6 +18,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool? readOnly;
   final void Function()? onTap;
   final FocusNode? focusNode;
+  final bool isMultiLine; // New variable
 
   const CustomTextFormField({
     super.key,
@@ -35,12 +36,12 @@ class CustomTextFormField extends StatelessWidget {
     this.readOnly = false,
     this.onTap,
     this.focusNode,
+    this.isMultiLine = false, // Default value
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50,
       child: TextFormField(
         focusNode: focusNode,
         onTap: onTap,
@@ -51,40 +52,45 @@ class CustomTextFormField extends StatelessWidget {
         textAlign: TextAlign.start,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: hintStyle ?? AppTextStyles.font14WeightRegular,
-            contentPadding: contentPadding,
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: const BorderSide(
-                color: Color(0xFFBABABA),
-                width: 1,
-              ),
+          hintText: hintText,
+          hintStyle: hintStyle ?? AppTextStyles.font14WeightRegular,
+          contentPadding: contentPadding,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.r),
+            borderSide: const BorderSide(
+              color: Color(0xFFBABABA),
+              width: 1,
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: const BorderSide(
-                color: Color(0xFF5F33E1),
-                width: 1,
-              ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.r),
+            borderSide: const BorderSide(
+              color: Color(0xFF5F33E1),
+              width: 1,
             ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: const BorderSide(
-                color: Colors.red,
-                width: 1,
-              ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.r),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 1,
             ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: const BorderSide(
-                color: Colors.red,
-                width: 1,
-              ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.r),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 1,
             ),
-            prefixIcon: prefixIcon,
-            suffixIcon: suffixIcon),
-        keyboardType: keyboardType,
+          ),
+          prefixIcon: prefixIcon,
+          suffixIcon: suffixIcon,
+        ),
+        keyboardType: isMultiLine ? TextInputType.multiline : keyboardType,
+        maxLines: isMultiLine ? null : 1,
+        // null allows unlimited lines
+        minLines: isMultiLine ? 10 : 1,
+        // Specify minimum lines for multi-line
         style: Theme.of(context).textTheme.labelLarge,
         inputFormatters: inputFormatters,
       ),

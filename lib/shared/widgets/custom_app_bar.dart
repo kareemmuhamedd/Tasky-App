@@ -4,18 +4,26 @@ import 'package:go_router/go_router.dart';
 import 'package:tasky_app/shared/typography/app_text_styles.dart';
 
 import '../../../../shared/assets/icons.dart';
-import 'custom_drop_down_menu.dart';
-class CustomTaskDetailsScreenAppBar extends StatelessWidget {
-  const CustomTaskDetailsScreenAppBar({
+import '../../features/task_details/view/widgets/custom_drop_down_menu.dart';
+
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomAppBar({
     super.key,
+    required this.appBarTitle,
+    this.isHaveActions = true,
   });
+
+  final bool isHaveActions;
+  final String appBarTitle;
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      toolbarHeight: 45,
       titleSpacing: 0.0,
-      leadingWidth: 50.0,
+      leadingWidth: 60.0,
       leading: Center(
         child: Transform.flip(
           flipX: true,
@@ -32,17 +40,19 @@ class CustomTaskDetailsScreenAppBar extends StatelessWidget {
         ),
       ),
       title: Text(
-        'Task Details',
+        appBarTitle,
         style: AppTextStyles.font16WeightBold.copyWith(
           color: Colors.black,
         ),
       ),
-      actions: const [
-        Padding(
-          padding: EdgeInsets.only(right: 16.0),
-          child: CustomDropdownMenu(),
-        )
-      ],
+      actions: isHaveActions
+          ? const [
+              Padding(
+                padding: EdgeInsets.only(right: 16.0),
+                child: CustomDropdownMenu(),
+              )
+            ]
+          : null,
     );
   }
 }

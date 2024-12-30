@@ -1,24 +1,14 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:tasky_app/shared/assets/icons.dart';
 import 'package:tasky_app/shared/typography/app_text_styles.dart';
-
+import 'package:tasky_app/shared/widgets/custom_app_bar.dart';
 import '../../../../shared/theme/app_colors.dart';
-import '../widgets/custom_drop_down_menu.dart';
-import '../widgets/custom_task_details_Screen_app_bar.dart';
 
-class TaskDetailsScreen extends StatefulWidget {
+class TaskDetailsScreen extends StatelessWidget {
   const TaskDetailsScreen({super.key});
 
-  @override
-  State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
-}
-
-class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return const TaskDetailsBody();
@@ -31,10 +21,7 @@ class TaskDetailsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(45),
-          child: CustomTaskDetailsScreenAppBar(),
-        ),
+        appBar: const CustomAppBar(appBarTitle: 'Task Details'),
         body: SingleChildScrollView(
           child: Column(
             children: [

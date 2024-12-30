@@ -81,7 +81,7 @@ class _ExperienceLevelFormFieldState extends State<ExperienceLevelFormField> {
         Icons.keyboard_arrow_down_outlined,
         color: AppColors.textGreyColor2,
       ),
-      readOnly: true, // Makes it non-editable
+      readOnly: true,
     );
   }
 }
