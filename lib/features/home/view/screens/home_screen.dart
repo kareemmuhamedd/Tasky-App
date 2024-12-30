@@ -15,42 +15,46 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc()..add(const AllTasksRequested()),
-      // Dispatch AllTasksRequested initially
-      child: Scaffold(
-        appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(56),
-          child: HomeAppBar(),
-        ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 22.w),
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'My Tasks',
-                      style: AppTextStyles.font16WeightBold.copyWith(
-                          color: AppColors.blackColor.withOpacity(0.6)),
-                    ),
-                    const SizedBox(height: 16),
-                    const CustomHomeTabBar(),
-                  ],
-                ),
+      child: const HomeBody(),
+    );
+  }
+}
+
+class HomeBody extends StatelessWidget {
+  const HomeBody({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(56),
+        child: HomeAppBar(),
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 22.w),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'My Tasks',
+                    style: AppTextStyles.font16WeightBold
+                        .copyWith(color: AppColors.blackColor.withOpacity(0.6)),
+                  ),
+                  const SizedBox(height: 16),
+                  const CustomHomeTabBar(),
+                ],
               ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 16),
-              ),
-              const HomeTasksListView(),
-            ],
-          ),
+            ),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 16),
+            ),
+            const HomeTasksListView(),
+          ],
         ),
       ),
     );
   }
 }
-
-
-
-
