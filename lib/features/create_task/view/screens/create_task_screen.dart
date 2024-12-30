@@ -37,6 +37,8 @@ class CreateTaskBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String? taskTitle;
+    String? taskDescription;
     return Scaffold(
       appBar: const CustomAppBar(
         isHaveActions: false,
@@ -52,16 +54,22 @@ class CreateTaskBody extends StatelessWidget {
                 children: [
                   const CustomTaskAddImageWidget(),
                   const SizedBox(height: 16),
-                  const CustomAddTaskFieldWithHeader(
+                  CustomAddTaskFieldWithHeader(
                     header: 'Task Title',
-                    field: TaskTitleFormField(),
+                    field: TaskTitleFormField(
+                      onChanged: (value) {
+                        taskTitle = value;
+                      },
+                    ),
                   ),
                   const SizedBox(
                     height: 16,
                   ),
-                  const CustomAddTaskFieldWithHeader(
+                   CustomAddTaskFieldWithHeader(
                     header: 'Task Description',
-                    field: TaskDescriptionFormField(),
+                    field: TaskDescriptionFormField(onChanged: (value){
+                      taskDescription = value;
+                    },),
                   ),
                   const SizedBox(
                     height: 16,
@@ -87,17 +95,21 @@ class CreateTaskBody extends StatelessWidget {
                       style: AppTextStyles.font16WeightBold,
                     ),
                     onPressed: () {
-                      context.read<CreateTaskBloc>().add(
-                            CreateTaskRequested(
-                              CreateTaskRequest(
-                                image: 'image',
-                                title: 'title',
-                                desc: 'description',
-                                priority: 'high',
-                                dueDate: '12-10-2012',
-                              ),
-                            ),
-                          );
+                      print(taskTitle);
+                      print(taskDescription);
+                      print(state.selectedDueDate);
+                      print(state.selectedPriority);
+                      // context.read<CreateTaskBloc>().add(
+                      //       CreateTaskRequested(
+                      //         CreateTaskRequest(
+                      //           image: 'image',
+                      //           title: 'title',
+                      //           desc: 'description',
+                      //           priority: 'high',
+                      //           dueDate: '12-10-2012',
+                      //         ),
+                      //       ),
+                      //     );
                     },
                   ),
                 ],

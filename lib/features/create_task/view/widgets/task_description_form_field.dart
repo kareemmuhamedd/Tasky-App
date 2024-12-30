@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 import '../../../../shared/widgets/custom_text_form_field.dart';
 
 class TaskDescriptionFormField extends StatelessWidget {
-  const TaskDescriptionFormField({super.key});
+  const TaskDescriptionFormField({
+    super.key,
+    required this.onChanged,
+  });
+
+  final ValueChanged<String> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return const CustomTextFormField(
-      contentPadding: EdgeInsets.only(left: 15, top: 25),
+    return CustomTextFormField(
+      onChanged: onChanged,
+      contentPadding: const EdgeInsets.only(left: 15, top: 25),
       hintText: 'Enter description here...',
       isMultiLine: true,
     );

@@ -43,6 +43,7 @@ class CustomTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: TextFormField(
+        onChanged: onChanged,
         focusNode: focusNode,
         onTap: onTap,
         controller: controller,

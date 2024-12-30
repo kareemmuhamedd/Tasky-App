@@ -17,9 +17,9 @@ class CreateTaskState extends Equatable {
 
   const CreateTaskState.initial()
       : this._(
-    status: CreateTaskStatus.initial,
-    message: '',
-  );
+          status: CreateTaskStatus.initial,
+          message: '',
+        );
 
   final CreateTaskStatus status;
   final String message;
@@ -42,9 +42,9 @@ class CreateTaskState extends Equatable {
 
   @override
   List<Object?> get props => [
-    status,
-    message,
-    selectedPriority,
-    selectedDueDate,
-  ];
+        status,
+        message,
+        selectedPriority,
+        selectedDueDate,
+      ];
 }

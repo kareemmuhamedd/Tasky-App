@@ -20,19 +20,19 @@ class CreateTaskBloc extends Bloc<CreateTaskEvent, CreateTaskState> {
   final CreateTaskRepository _createTaskRepository;
 
   void _onCreateTaskRequested(
-      CreateTaskRequested event,
-      Emitter<CreateTaskState> emit,
-      ) async {
+    CreateTaskRequested event,
+    Emitter<CreateTaskState> emit,
+  ) async {
     emit(state.copyWith(status: CreateTaskStatus.loading));
     final result = await _createTaskRepository.createTask(data: event.data);
     result.fold(
-          (failure) => emit(
+      (failure) => emit(
         state.copyWith(
           status: CreateTaskStatus.error,
           message: failure.message,
         ),
       ),
-          (task) => emit(
+      (task) => emit(
         state.copyWith(
           status: CreateTaskStatus.success,
           message: 'Task created successfully',
@@ -42,16 +42,16 @@ class CreateTaskBloc extends Bloc<CreateTaskEvent, CreateTaskState> {
   }
 
   void _onPriorityChanged(
-      PriorityChanged event,
-      Emitter<CreateTaskState> emit,
-      ) {
+    PriorityChanged event,
+    Emitter<CreateTaskState> emit,
+  ) {
     emit(state.copyWith(selectedPriority: event.priority));
   }
 
   void _onDueDateChanged(
-      DueDateChanged event,
-      Emitter<CreateTaskState> emit,
-      ) {
+    DueDateChanged event,
+    Emitter<CreateTaskState> emit,
+  ) {
     emit(state.copyWith(selectedDueDate: event.dueDate));
   }
 }
