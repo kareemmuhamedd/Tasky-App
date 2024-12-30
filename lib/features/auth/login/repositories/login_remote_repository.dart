@@ -13,8 +13,9 @@ class LoginRemoteRepository {
   }) : _dio = dio;
   final Dio _dio;
 
-  Future<Either<Failure, LoginResponseModel>> login(
-      {required LoginModel data}) async {
+  Future<Either<Failure, LoginResponseModel>> login({
+    required LoginModel data,
+  }) async {
     try {
       final response = await _dio.post(
         '${ApiConstants.baseUrl}/auth/login',

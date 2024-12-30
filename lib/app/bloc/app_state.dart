@@ -20,7 +20,7 @@ enum AppStatus {
 
 class AppState extends Equatable {
   const AppState({
-    this.status = AppStatus.initial, // Default to the initial state
+    this.status = AppStatus.initial,
   });
 
   final AppStatus status;

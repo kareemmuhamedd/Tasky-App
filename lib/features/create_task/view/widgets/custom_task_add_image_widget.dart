@@ -18,7 +18,6 @@ class _CustomTaskAddImageWidgetState extends State<CustomTaskAddImageWidget> {
   File? selectedImage;
 
   void selectImage() async {
-    print('i am called');
     final pickedImage = await pickImage();
     if (pickedImage != null) {
       setState(() {
@@ -32,7 +31,7 @@ class _CustomTaskAddImageWidgetState extends State<CustomTaskAddImageWidget> {
       onTap: selectImage,
       child: selectedImage != null
           ? SizedBox(
-        height: 150,
+        height: 300,
         width: double.infinity,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
