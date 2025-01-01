@@ -13,6 +13,7 @@ class CreateTaskState extends Equatable {
     required this.message,
     this.selectedPriority,
     this.selectedDueDate,
+    this.image,
   });
 
   const CreateTaskState.initial()
@@ -25,18 +26,21 @@ class CreateTaskState extends Equatable {
   final String message;
   final String? selectedPriority;
   final String? selectedDueDate;
+  final String? image;
 
   CreateTaskState copyWith({
     CreateTaskStatus? status,
     String? message,
     String? selectedPriority,
     String? selectedDueDate,
+    String? image,
   }) {
     return CreateTaskState._(
       status: status ?? this.status,
       message: message ?? this.message,
       selectedPriority: selectedPriority ?? this.selectedPriority,
       selectedDueDate: selectedDueDate ?? this.selectedDueDate,
+      image: image ?? this.image,
     );
   }
 
@@ -46,5 +50,6 @@ class CreateTaskState extends Equatable {
         message,
         selectedPriority,
         selectedDueDate,
+        image,
       ];
 }

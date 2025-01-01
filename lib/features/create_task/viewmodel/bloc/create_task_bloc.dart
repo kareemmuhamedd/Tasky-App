@@ -12,32 +12,60 @@ class CreateTaskBloc extends Bloc<CreateTaskEvent, CreateTaskState> {
   CreateTaskBloc({required CreateTaskRepository createTaskRepository})
       : _createTaskRepository = createTaskRepository,
         super(const CreateTaskState.initial()) {
-    on<CreateTaskRequested>(_onCreateTaskRequested);
+    on<TaskImageChanged>(_onTaskImageChanged);
     on<PriorityChanged>(_onPriorityChanged);
     on<DueDateChanged>(_onDueDateChanged);
+    on<CreateTaskRequestedWithImage>(_onCreateTaskRequestedWithImage);
   }
 
   final CreateTaskRepository _createTaskRepository;
 
-  void _onCreateTaskRequested(
-    CreateTaskRequested event,
+  void _onTaskImageChanged(
+    TaskImageChanged event,
+    Emitter<CreateTaskState> emit,
+  ) {
+    emit(state.copyWith(image: event.taskImage));
+  }
+
+  void _onCreateTaskRequestedWithImage(
+    CreateTaskRequestedWithImage event,
     Emitter<CreateTaskState> emit,
   ) async {
     emit(state.copyWith(status: CreateTaskStatus.loading));
-    final result = await _createTaskRepository.createTask(data: event.data);
-    result.fold(
-      (failure) => emit(
-        state.copyWith(
+
+    /// upload image first before creating task
+    /// because task creation requires image url to be passed in the request
+    final imageResult =
+        await _createTaskRepository.uploadImage(imagePath: event.taskImage);
+    final String? imagePath = imageResult.fold(
+      (failure) {
+        emit(state.copyWith(
           status: CreateTaskStatus.error,
           message: failure.message,
-        ),
+        ));
+        return null;
+      },
+      (imagePath) => imagePath,
+    );
+
+    /// stop if image upload failed
+    if (imagePath == null) return;
+
+    /// after image upload, process to create task
+    final taskResult = await _createTaskRepository.createTask(
+      data: event.data.copyWith(
+        image: imagePath,
       ),
-      (task) => emit(
-        state.copyWith(
-          status: CreateTaskStatus.success,
-          message: 'Task created successfully',
-        ),
-      ),
+    );
+    taskResult.fold(
+      (failure) => emit(state.copyWith(
+        status: CreateTaskStatus.error,
+        message: failure.message,
+      )),
+      (task) => emit(state.copyWith(
+        status: CreateTaskStatus.success,
+        message: 'Task created successfully',
+      )),
     );
   }
 

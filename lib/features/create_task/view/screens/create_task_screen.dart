@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:tasky_app/features/create_task/view/widgets/due_date_form_field.dart';
 import 'package:tasky_app/features/create_task/view/widgets/priority_form_field.dart';
 import 'package:tasky_app/features/create_task/view/widgets/task_title_form_field.dart';
@@ -9,6 +10,7 @@ import 'package:tasky_app/shared/widgets/app_button.dart';
 import 'package:tasky_app/shared/widgets/custom_app_bar.dart';
 
 import '../../../../shared/typography/app_text_styles.dart';
+import '../../../../shared/utils/snack_bars/custom_snack_bar.dart';
 import '../../model/create_task_request.dart';
 import '../../repositories/create_task_repository.dart';
 import '../../viewmodel/bloc/create_task_bloc.dart';
@@ -65,11 +67,13 @@ class CreateTaskBody extends StatelessWidget {
                   const SizedBox(
                     height: 16,
                   ),
-                   CustomAddTaskFieldWithHeader(
+                  CustomAddTaskFieldWithHeader(
                     header: 'Task Description',
-                    field: TaskDescriptionFormField(onChanged: (value){
-                      taskDescription = value;
-                    },),
+                    field: TaskDescriptionFormField(
+                      onChanged: (value) {
+                        taskDescription = value;
+                      },
+                    ),
                   ),
                   const SizedBox(
                     height: 16,
@@ -95,21 +99,32 @@ class CreateTaskBody extends StatelessWidget {
                       style: AppTextStyles.font16WeightBold,
                     ),
                     onPressed: () {
-                      print(taskTitle);
-                      print(taskDescription);
-                      print(state.selectedDueDate);
-                      print(state.selectedPriority);
-                      // context.read<CreateTaskBloc>().add(
-                      //       CreateTaskRequested(
-                      //         CreateTaskRequest(
-                      //           image: 'image',
-                      //           title: 'title',
-                      //           desc: 'description',
-                      //           priority: 'high',
-                      //           dueDate: '12-10-2012',
-                      //         ),
-                      //       ),
-                      //     );
+                      if (taskTitle == null || taskDescription == null) {
+                        showCustomSnackBar(
+                          context,
+                          'Please fill all fields',
+                          isError: true,
+                        );
+                        return;
+                      } else {
+                        context.read<CreateTaskBloc>().add(
+                              CreateTaskRequestedWithImage(
+                                taskImage: state.image!,
+                                data: CreateTaskRequest(
+                                  image: '',
+                                  title: taskTitle ?? '',
+                                  desc: taskDescription ?? '',
+                                  priority: state.selectedPriority ?? 'medium',
+                                  dueDate: state.selectedDueDate ??
+                                      DateFormat('dd/MM/yyyy').format(
+                                        DateTime.now().add(
+                                          const Duration(days: 2),
+                                        ),
+                                      ),
+                                ),
+                              ),
+                            );
+                      }
                     },
                   ),
                 ],
