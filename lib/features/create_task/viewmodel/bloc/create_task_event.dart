@@ -7,10 +7,23 @@ sealed class CreateTaskEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class CreateTaskRequested extends CreateTaskEvent {
+final class TaskImageChanged extends CreateTaskEvent {
+  final String taskImage;
+
+  const TaskImageChanged(this.taskImage);
+
+  @override
+  List<Object> get props => [taskImage];
+}
+
+final class CreateTaskRequestedWithImage extends CreateTaskEvent {
+  final String taskImage;
   final CreateTaskRequest data;
 
-  const CreateTaskRequested(this.data);
+  const CreateTaskRequestedWithImage({
+    required this.taskImage,
+    required this.data,
+  });
 }
 
 final class PriorityChanged extends CreateTaskEvent {

@@ -13,38 +13,43 @@ class CreateTaskState extends Equatable {
     required this.message,
     this.selectedPriority,
     this.selectedDueDate,
+    this.image,
   });
 
   const CreateTaskState.initial()
       : this._(
-    status: CreateTaskStatus.initial,
-    message: '',
-  );
+          status: CreateTaskStatus.initial,
+          message: '',
+        );
 
   final CreateTaskStatus status;
   final String message;
   final String? selectedPriority;
   final String? selectedDueDate;
+  final String? image;
 
   CreateTaskState copyWith({
     CreateTaskStatus? status,
     String? message,
     String? selectedPriority,
     String? selectedDueDate,
+    String? image,
   }) {
     return CreateTaskState._(
       status: status ?? this.status,
       message: message ?? this.message,
       selectedPriority: selectedPriority ?? this.selectedPriority,
       selectedDueDate: selectedDueDate ?? this.selectedDueDate,
+      image: image ?? this.image,
     );
   }
 
   @override
   List<Object?> get props => [
-    status,
-    message,
-    selectedPriority,
-    selectedDueDate,
-  ];
+        status,
+        message,
+        selectedPriority,
+        selectedDueDate,
+        image,
+      ];
 }

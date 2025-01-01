@@ -24,6 +24,7 @@ class CreateTaskRequest {
       dueDate: json['dueDate'] as String,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'image': image,
@@ -33,12 +34,20 @@ class CreateTaskRequest {
       'dueDate': dueDate,
     };
   }
-}
 
-// {
-// "image"  : "path.png",
-// "title" : "title",
-// "desc" : "desc",
-// "priority" : "low",//low , medium , high
-// "dueDate" : "2024-05-15"
-// }
+  CreateTaskRequest copyWith({
+    String? image,
+    String? title,
+    String? desc,
+    String? priority,
+    String? dueDate,
+  }) {
+    return CreateTaskRequest(
+      image: image ?? this.image,
+      title: title ?? this.title,
+      desc: desc ?? this.desc,
+      priority: priority ?? this.priority,
+      dueDate: dueDate ?? this.dueDate,
+    );
+  }
+}
