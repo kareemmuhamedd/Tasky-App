@@ -55,7 +55,7 @@ class AppRoutes {
         GoRoute(
           path: AppRoutesPaths.kHomeScreen,
           name: AppRoutesPaths.kHomeScreen,
-          builder: (context, state) => const CreateTaskScreen(),
+          builder: (context, state) => const HomeScreen(),
         ),
         // Task Details Route
         GoRoute(

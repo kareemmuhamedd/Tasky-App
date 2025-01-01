@@ -1,15 +1,20 @@
 import 'package:bloc/bloc.dart';
 import 'package:tasky_app/features/create_task/model/task_model.dart';
+import 'package:tasky_app/features/home/repositories/home_repository.dart';
 
 part 'home_event.dart';
 
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc() : super(const HomeState.initial()) {
+  HomeBloc({required HomeRepository homeRepository})
+      : _homeRepository = homeRepository,
+        super(const HomeState.initial()) {
     on<HomeFilterChanged>(_onFilterChanged);
     on<AllTasksRequested>(_onAllTasksRequested);
   }
+
+  final HomeRepository _homeRepository;
 
   void _onFilterChanged(HomeFilterChanged event, Emitter<HomeState> emit) {
     emit(state.copyWith(selectedIndex: event.selectedIndex));
@@ -34,18 +39,42 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _onAllTasksRequested(
-      AllTasksRequested event, Emitter<HomeState> emit) async {
+    AllTasksRequested event,
+    Emitter<HomeState> emit,
+  ) async {
     emit(state.copyWith(status: HomeStatus.loading));
+    print('i am trying to get tasks');
     try {
-      await Future.delayed(const Duration(seconds: 1)); // Simulate loading
+      print('i am trying to get tasks in try');
+      List<TaskModel>? allTasks;
+      final todos = await _homeRepository.getTasks(1);
+      todos.fold(
+        (failure) {
+          print('i have failed to get tasks $failure');
+          emit(state.copyWith(
+          status: HomeStatus.failure,
+          message: failure.message,
+        ));
+        },
+        (tasks) {
+          allTasks = tasks;
+          print(allTasks?[0].desc);
+          emit(state.copyWith(
+            status: HomeStatus.success,
+            allTasks: tasks,
+          ));
+        },
+      );
 
       // Example data (replace this with real data)
-      List<TaskModel> allTasks = _getAllTasks();
 
       // Filter tasks by status and update the state
-      final inProgressTasks = allTasks.where((task) => task.status == "in-progress").toList();
-      final waitingTasks = allTasks.where((task) => task.status == "waiting").toList();
-      final finishedTasks = allTasks.where((task) => task.status == "finished").toList();
+      final inProgressTasks =
+          allTasks?.where((task) => task.status == "in-progress").toList();
+      final waitingTasks =
+          allTasks?.where((task) => task.status == "waiting").toList();
+      final finishedTasks =
+          allTasks?.where((task) => task.status == "finished").toList();
 
       emit(state.copyWith(
         status: HomeStatus.success,
@@ -59,11 +88,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(state.copyWith(
           status: HomeStatus.failure, message: error.toString()));
     }
-  }
-
-  // Helper method to fetch all tasks
-  List<TaskModel> _getAllTasks() {
-    // Example data - replace with real data fetching logic
-    return fakeTasks;
   }
 }
