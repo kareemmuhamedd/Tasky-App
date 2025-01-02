@@ -1,19 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tasky_app/features/auth/login/view/screens/login_screen.dart';
-import 'package:tasky_app/features/auth/signup/view/screens/signup_screen.dart';
 import 'package:tasky_app/features/create_task/view/screens/create_task_screen.dart';
 import 'package:tasky_app/features/home/view/screens/home_screen.dart';
 import 'package:tasky_app/features/onboarding/onboarding_screen.dart';
 import 'package:tasky_app/features/splash/view/splash_screen.dart';
 
+import '../../features/auth/view/auth_screen.dart';
 import '../../features/task_details/view/screens/task_details_screen.dart';
 import '../bloc/app_bloc.dart';
 
 abstract class AppRoutesPaths {
   static const String kOnboarding = '/onboarding-screen';
-  static const String kLoginScreen = '/login-screen';
-  static const String kSignupScreen = '/signup-screen';
+  static const String kAuthScreen = '/auth-screen';
   static const String kHomeScreen = '/home-screen';
   static const String kSplashScreen = '/splash-screen';
   static const String kTaskDetailsScreen = '/task-details-screen';
@@ -39,17 +39,11 @@ class AppRoutes {
           name: AppRoutesPaths.kOnboarding,
           builder: (context, state) => const OnboardingScreen(),
         ),
-        // Login Route
+        // Auth Route
         GoRoute(
-          path: AppRoutesPaths.kLoginScreen,
-          name: AppRoutesPaths.kLoginScreen,
-          builder: (context, state) => const LoginScreen(),
-        ),
-        // Signup Route
-        GoRoute(
-          path: AppRoutesPaths.kSignupScreen,
-          name: AppRoutesPaths.kSignupScreen,
-          builder: (context, state) => const SignupScreen(),
+          path: AppRoutesPaths.kAuthScreen,
+          name: AppRoutesPaths.kAuthScreen,
+          builder: (context, state) => const AuthScreen(),
         ),
         // Home Route
         GoRoute(
@@ -72,8 +66,15 @@ class AppRoutes {
       ],
       redirect: (context, state) {
         final appStatus = appBloc.state.status;
-
-        // Wait for initialization to complete
+        final authenticated = appStatus == AppStatus.authenticated;
+        final authenticating =
+            state.matchedLocation == AppRoutesPaths.kAuthScreen;
+        final isInHome = state.matchedLocation == AppRoutesPaths.kHomeScreen;
+        if (isInHome && !authenticated) return AppRoutesPaths.kAuthScreen;
+        if (!authenticated) return AppRoutesPaths.kAuthScreen;
+        if (authenticated && authenticating) return AppRoutesPaths.kHomeScreen;
+        return null;
+        //Wait for initialization to complete
         if (appStatus == AppStatus.initial) {
           return AppRoutesPaths.kSplashScreen;
         }
@@ -83,8 +84,8 @@ class AppRoutes {
         }
 
         if (appStatus == AppStatus.unauthenticated &&
-            state.uri.toString() != AppRoutesPaths.kLoginScreen) {
-          return AppRoutesPaths.kLoginScreen;
+            state.uri.toString() != AppRoutesPaths.kAuthScreen) {
+          return AppRoutesPaths.kAuthScreen;
         }
 
         if (appStatus == AppStatus.onboardingRequired &&
@@ -101,10 +102,17 @@ class AppRoutes {
 
 class GoRouterNotifier extends ChangeNotifier {
   final AppBloc appBloc;
+  late final StreamSubscription<AppState> _subscription;
 
   GoRouterNotifier(this.appBloc) {
-    appBloc.stream.listen((state) {
+    _subscription = appBloc.stream.listen((state) {
       notifyListeners();
     });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 }

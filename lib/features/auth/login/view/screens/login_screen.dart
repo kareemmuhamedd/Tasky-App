@@ -2,9 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:tasky_app/app/bloc/app_bloc.dart';
-import 'package:tasky_app/app/routes/app_routes.dart';
 import 'package:tasky_app/features/auth/login/model/login_model.dart';
 import 'package:tasky_app/features/auth/login/view/widgets/login_form.dart';
 import 'package:tasky_app/shared/theme/app_colors.dart';
@@ -13,6 +11,7 @@ import 'package:tasky_app/shared/widgets/app_button.dart';
 import '../../../../../shared/assets/images.dart';
 import '../../../../../shared/networking/dio_factory.dart';
 import '../../../../../shared/typography/app_text_styles.dart';
+import '../../../cubit/auth_cubit.dart';
 import '../../repositories/login_remote_repository.dart';
 import '../../viewmodel/login_cubit/login_cubit.dart';
 
@@ -104,7 +103,8 @@ class _LoginViewState extends State<LoginView> {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                context.go(AppRoutesPaths.kSignupScreen);
+                                final cubit = context.read<AuthCubit>();
+                                cubit.changeAuth(showLogin: false);
                               },
                           ),
                         ],

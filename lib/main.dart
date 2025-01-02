@@ -9,7 +9,7 @@ void main() async {
   await SharedPrefHelper.instance.init();
   runApp(
     DevicePreview(
-      enabled: !kReleaseMode,
+      enabled: false,
       builder: (context) => const App(),
     ),
   );
