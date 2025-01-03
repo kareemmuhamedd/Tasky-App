@@ -6,11 +6,11 @@ abstract class UiHelper {
 
   static Color getTaskStatusBGColor(String status) {
     switch (status.toLowerCase()) {
-      case 'in-progress':
+      case 'inprogress':
         return AppColors.lightPurpleColor;
       case 'waiting':
         return AppColors.lightOrangeColor;
-      case 'finished':
+      case 'completed':
         return AppColors.lightBlueColor;
       default:
         return AppColors.textGreyColor3;
@@ -19,11 +19,11 @@ abstract class UiHelper {
 
   static Color getTaskStatusTextColor(String status) {
     switch (status.toLowerCase()) {
-      case 'in-progress':
+      case 'inprogress':
         return AppColors.primaryColor;
       case 'waiting':
         return AppColors.orangeColor;
-      case 'finished':
+      case 'completed':
         return AppColors.blueColor;
       default:
         return AppColors.textGreyColor;

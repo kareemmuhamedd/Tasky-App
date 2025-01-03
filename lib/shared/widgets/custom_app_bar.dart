@@ -11,10 +11,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.appBarTitle,
     this.isHaveActions = true,
+    this.onBack,
   });
 
   final bool isHaveActions;
   final String appBarTitle;
+  final Future<void> Function()? onBack; // Changed type to Future<void>
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -28,7 +30,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Transform.flip(
           flipX: true,
           child: GestureDetector(
-            onTap: () => context.pop(),
+            onTap: () async {
+              if (onBack != null) {
+                await onBack!(); // Properly call the function and await it
+              } else {
+                context.pop();
+              }
+            },
             child: SvgPicture.asset(
               AppIcons.arrowLeftIcon,
               colorFilter: const ColorFilter.mode(
@@ -47,11 +55,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: isHaveActions
           ? const [
-              Padding(
-                padding: EdgeInsets.only(right: 16.0),
-                child: CustomDropdownMenu(),
-              )
-            ]
+        Padding(
+          padding: EdgeInsets.only(right: 16.0),
+          child: CustomDropdownMenu(),
+        )
+      ]
           : null,
     );
   }

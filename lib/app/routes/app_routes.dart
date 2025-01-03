@@ -8,6 +8,7 @@ import 'package:tasky_app/features/onboarding/onboarding_screen.dart';
 import 'package:tasky_app/features/splash/view/splash_screen.dart';
 
 import '../../features/auth/view/auth_screen.dart';
+import '../../features/create_task/model/task_model.dart';
 import '../../features/task_details/view/screens/task_details_screen.dart';
 import '../bloc/app_bloc.dart';
 
@@ -55,7 +56,12 @@ class AppRoutes {
         GoRoute(
           path: AppRoutesPaths.kTaskDetailsScreen,
           name: AppRoutesPaths.kTaskDetailsScreen,
-          builder: (context, state) => const TaskDetailsScreen(),
+          builder: (context, state) {
+            final task = state.extra as TaskModel;
+            return TaskDetailsScreen(
+              task: task,
+            );
+          },
         ),
         // Create Task Route
         GoRoute(

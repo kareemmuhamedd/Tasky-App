@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../shared/assets/icons.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/typography/app_text_styles.dart';
 import '../../../../shared/widgets/custom_tile_widget.dart';
-import '../../viewmodel/bloc/create_task_bloc.dart';
+import '../../../update_task/viewmodel/bloc/update_task_bloc.dart';
 
-class PriorityFormField extends StatelessWidget {
-  const PriorityFormField({super.key});
+class TaskPriority extends StatelessWidget {
+  const TaskPriority({
+    super.key,
+    required this.taskPriority,
+  });
+
+  final String taskPriority;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CreateTaskBloc, CreateTaskState>(
+    return BlocBuilder<UpdateTaskBloc, UpdateTaskState>(
       builder: (context, state) {
-        final selectedPriority = state.selectedPriority ?? 'Medium';
-
+        final selectedPriority = state.selectedPriority ?? taskPriority;
         return CustomTileWidget(
           prefix: Row(
             children: [
@@ -25,13 +30,15 @@ class PriorityFormField extends StatelessWidget {
                 AppIcons.flagIcon,
                 height: 24,
               ),
-              SizedBox(width: 10.w),
+              SizedBox(
+                width: 10.w,
+              ),
               Text(
-                '$selectedPriority Priority',
+                '${toBeginningOfSentenceCase(selectedPriority)} Priority',
                 style: AppTextStyles.font16WeightBold.copyWith(
                   color: AppColors.primaryColor,
                 ),
-              ),
+              )
             ],
           ),
           suffix: Padding(
@@ -40,8 +47,8 @@ class PriorityFormField extends StatelessWidget {
           ),
           options: const ['Low', 'Medium', 'High'],
           onOptionSelected: (selected) {
-            context.read<CreateTaskBloc>().add(
-                  PriorityChanged(
+            context.read<UpdateTaskBloc>().add(
+                  PriorityUpdated(
                     selected.toLowerCase(),
                   ),
                 );
