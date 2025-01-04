@@ -73,7 +73,7 @@ class HomeBody extends StatelessWidget {
             elevation: 0,
             mini: true,
             onPressed: () {
-              // todo: Implement QR code scanning
+              context.pushNamed(AppRoutesPaths.kScanQRCodeScreen);
             },
             child: const Icon(
               Icons.qr_code,

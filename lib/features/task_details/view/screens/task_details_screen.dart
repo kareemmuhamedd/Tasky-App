@@ -11,12 +11,14 @@ import 'package:tasky_app/features/update_task/viewmodel/bloc/update_task_bloc.d
 import 'package:tasky_app/shared/assets/icons.dart';
 import 'package:tasky_app/shared/networking/dio_factory.dart';
 import 'package:tasky_app/shared/typography/app_text_styles.dart';
+import 'package:tasky_app/shared/utils/extensions/show_dialog_extension.dart';
 import 'package:tasky_app/shared/widgets/custom_app_bar.dart';
 import 'package:tasky_app/shared/widgets/custom_tile_widget.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../update_task/models/update_task_request.dart';
 import '../widgets/task_priority.dart';
 import '../widgets/task_progress_status.dart';
+import '../widgets/task_qr_code.dart';
 
 class TaskDetailsScreen extends StatelessWidget {
   const TaskDetailsScreen({
@@ -52,64 +54,69 @@ class TaskDetailsBody extends StatelessWidget {
 
   final TaskModel task;
 
-  Future<bool> _handleUnsavedChanges(BuildContext context) async {
+  bool canPop(BuildContext context) {
     final bloc = context.read<UpdateTaskBloc>();
+    print('Selected Priority: ${bloc.state.selectedPriority}');
+    print('Task Priority: ${task.priority}');
+    print('Selected Status: ${bloc.state.selectedProgressStatus}');
+    print('Task Status: ${task.status}');
 
     if ((bloc.state.selectedPriority != null ||
-            bloc.state.selectedProgressStatus != null) &&
+        bloc.state.selectedProgressStatus != null) &&
         (bloc.state.selectedPriority != task.priority ||
             bloc.state.selectedProgressStatus != task.status)) {
-      final shouldLeave = await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Unsaved Changes'),
-          content:
-              const Text('You have unsaved changes. Do you want to save them?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-                context.pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                bloc.add(
-                  UpdateTaskRequestedWithImage(
-                    taskId: task.id,
-                    data: UpdateTaskRequest(
-                      priority: bloc.state.selectedPriority ?? task.priority,
-                      status: bloc.state.selectedProgressStatus ?? task.status,
-                    ),
-                  ),
-                );
-                Navigator.of(context).pop(true); // Close the dialog
-              },
-              child: const Text('Yes'),
-            ),
-          ],
-        ),
-      );
-      return shouldLeave ?? false;
+      print('Unsaved changes detected.');
+      return true;
+    } else {
+      print('No unsaved changes.');
+      return false;
     }
-    return true;
+  }
+
+
+  void _confirmGoBack(BuildContext context) {
+    final bloc = context.read<UpdateTaskBloc>();
+    context.confirmAction(
+      cancel: () {
+        context.pop();
+      },
+      fn: () {
+        bloc.add(
+          UpdateTaskRequestedWithImage(
+            taskId: task.id,
+            data: UpdateTaskRequest(
+              priority: bloc.state.selectedPriority ?? task.priority,
+              status: bloc.state.selectedProgressStatus ?? task.status,
+            ),
+          ),
+        );
+        context.pop();
+      },
+      title: 'You have unsaved changes. Do you want to save them?',
+      content: 'Save changes and go back?',
+      noText: 'No',
+      yesText: 'Yes',
+      yesTextStyle: AppTextStyles.font14WeightRegular.copyWith(
+        color: AppColors.primaryColor,
+      ),
+      noTextStyle: AppTextStyles.font14WeightRegular.copyWith(
+        color: AppColors.errorRedColor,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => _handleUnsavedChanges(context),
+    return PopScope(
+      canPop: canPop(context),
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _confirmGoBack(context);
+      },
       child: Scaffold(
         appBar: CustomAppBar(
           appBarTitle: 'Task Details',
-          onBack: () async {
-            final shouldLeave = await _handleUnsavedChanges(context);
-            if (shouldLeave) {
-              void onBack() => context.pop();
-              onBack.call();
-            }
-          },
+          onBack: () => _confirmGoBack(context),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -180,16 +187,7 @@ class TaskDetailsBody extends StatelessWidget {
                     SizedBox(
                       height: 16.h,
                     ),
-                    Center(
-                      child: Container(
-                        height: 326,
-                        width: 326,
-                        color: AppColors.whiteColor,
-                        child: const Center(
-                          child: Icon(Icons.qr_code_2_outlined, size: 300),
-                        ),
-                      ),
-                    ),
+                    TaskQRCode(taskId: task.id),
                     const SizedBox(
                       height: 20,
                     )

@@ -10,7 +10,7 @@ abstract class UiHelper {
         return AppColors.lightPurpleColor;
       case 'waiting':
         return AppColors.lightOrangeColor;
-      case 'completed':
+      case 'finished':
         return AppColors.lightBlueColor;
       default:
         return AppColors.textGreyColor3;
@@ -23,7 +23,7 @@ abstract class UiHelper {
         return AppColors.primaryColor;
       case 'waiting':
         return AppColors.orangeColor;
-      case 'completed':
+      case 'finished':
         return AppColors.blueColor;
       default:
         return AppColors.textGreyColor;

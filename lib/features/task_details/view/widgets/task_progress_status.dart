@@ -31,7 +31,7 @@ class TaskProgressStatus extends StatelessWidget {
             padding: const EdgeInsets.only(right: 4),
             child: SvgPicture.asset(AppIcons.roundedDownArrowIcon),
           ),
-          options: const ['Waiting', 'Inprogress', 'Completed'],
+          options: const ['Waiting', 'Inprogress', 'Finished'],
           onOptionSelected: (selected) {
             context.read<UpdateTaskBloc>().add(
                   TaskProgressStatusUpdated(

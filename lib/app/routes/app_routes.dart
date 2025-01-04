@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasky_app/features/create_task/view/screens/create_task_screen.dart';
 import 'package:tasky_app/features/home/view/screens/home_screen.dart';
+import 'package:tasky_app/features/home/view/screens/scan_task_qr_code_screen.dart';
 import 'package:tasky_app/features/onboarding/onboarding_screen.dart';
 import 'package:tasky_app/features/splash/view/splash_screen.dart';
 
@@ -19,6 +20,7 @@ abstract class AppRoutesPaths {
   static const String kSplashScreen = '/splash-screen';
   static const String kTaskDetailsScreen = '/task-details-screen';
   static const String kCreateTaskScreen = '/create-task-screen';
+  static const String kScanQRCodeScreen = '/scan-qr-code-screen';
 }
 
 class AppRoutes {
@@ -68,6 +70,11 @@ class AppRoutes {
           path: AppRoutesPaths.kCreateTaskScreen,
           name: AppRoutesPaths.kCreateTaskScreen,
           builder: (context, state) => const CreateTaskScreen(),
+        ),
+        GoRoute(
+          path: AppRoutesPaths.kScanQRCodeScreen,
+          name: AppRoutesPaths.kScanQRCodeScreen,
+          builder: (context, state) => const ScanTaskQrCodeScreen(),
         ),
       ],
       redirect: (context, state) {

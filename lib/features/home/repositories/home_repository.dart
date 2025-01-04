@@ -33,4 +33,23 @@ class HomeRepository {
       return Left(Failure(message: errorMessage));
     }
   }
+
+  Future<Either<Failure, TaskModel>> getSpecificTask(String taskId) async {
+    try {
+      final response = await _dio.get(
+        '${ApiConstants.baseUrl}/todos/$taskId',
+      );
+      final task = TaskModel.fromJson(response.data as Map<String, dynamic>);
+      if (response.statusCode != 200) {
+        return Left(Failure(message: 'Failed to fetch tasks'));
+      }
+      return Right(task);
+    } on DioException catch (dioError) {
+      final errorMessage = CustomErrorHandler.handleDioError(dioError);
+      return Left(Failure(message: errorMessage));
+    } catch (error) {
+      final errorMessage = CustomErrorHandler.handleError(error);
+      return Left(Failure(message: errorMessage));
+    }
+  }
 }

@@ -17,19 +17,20 @@ class HomeState {
     required this.inProgressTasks,
     required this.waitingTasks,
     required this.finishedTasks,
+    this.task,
   });
 
   const HomeState.initial()
       : this._(
-    status: HomeStatus.initial,
-    message: '',
-    selectedIndex: 0,
-    tasks: const [],
-    allTasks: const [],
-    inProgressTasks: const [],
-    waitingTasks: const [],
-    finishedTasks: const [],
-  );
+          status: HomeStatus.initial,
+          message: '',
+          selectedIndex: 0,
+          tasks: const [],
+          allTasks: const [],
+          inProgressTasks: const [],
+          waitingTasks: const [],
+          finishedTasks: const [],
+        );
 
   final HomeStatus status;
   final String message;
@@ -39,6 +40,7 @@ class HomeState {
   final List<TaskModel> inProgressTasks;
   final List<TaskModel> waitingTasks;
   final List<TaskModel> finishedTasks;
+  final TaskModel? task;
 
   HomeState copyWith({
     HomeStatus? status,
@@ -49,6 +51,7 @@ class HomeState {
     List<TaskModel>? inProgressTasks,
     List<TaskModel>? waitingTasks,
     List<TaskModel>? finishedTasks,
+    TaskModel? task,
   }) {
     return HomeState._(
       status: status ?? this.status,
@@ -59,6 +62,7 @@ class HomeState {
       inProgressTasks: inProgressTasks ?? this.inProgressTasks,
       waitingTasks: waitingTasks ?? this.waitingTasks,
       finishedTasks: finishedTasks ?? this.finishedTasks,
+      task: task ?? this.task,
     );
   }
 }
