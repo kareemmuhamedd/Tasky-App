@@ -37,6 +37,7 @@ dependencies:
   path_provider: ^2.1.5
   mobile_scanner: ^6.0.2
   pretty_qr_code: ^3.3.0
+  flutter_image_compress: ^2.4.0
 
 dev_dependencies:
   flutter_test:

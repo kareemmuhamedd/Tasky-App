@@ -15,7 +15,7 @@ extension DialogExtension on BuildContext {
     required String title,
     required String noText,
     required String yesText,
-    required void Function() cancel, // Add cancel callback
+    required void Function() cancel,
     String? content,
     TextStyle? yesTextStyle,
     TextStyle? noTextStyle,
@@ -31,7 +31,7 @@ extension DialogExtension on BuildContext {
       noAction: noAction,
     );
     if (isConfirmed == null || !isConfirmed) {
-      cancel.call(); // Call cancel if the user presses "No"
+      cancel.call();
       return;
     }
     fn.call();

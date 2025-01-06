@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:tasky_app/features/create_task/view/widgets/due_date_form_field.dart';
 import 'package:tasky_app/features/create_task/view/widgets/priority_form_field.dart';
-import 'package:tasky_app/features/create_task/view/widgets/task_title_form_field.dart';
+import 'package:tasky_app/shared/widgets/task_title_form_field.dart';
 import 'package:tasky_app/shared/networking/dio_factory.dart';
 import 'package:tasky_app/shared/widgets/app_button.dart';
 
@@ -16,7 +16,7 @@ import '../../repositories/create_task_repository.dart';
 import '../../viewmodel/bloc/create_task_bloc.dart';
 import '../widgets/custom_add_task_field_with_header.dart';
 import '../widgets/custom_task_add_image_widget.dart';
-import '../widgets/task_description_form_field.dart';
+import '../../../../shared/widgets/task_description_form_field.dart';
 
 class CreateTaskScreen extends StatelessWidget {
   const CreateTaskScreen({super.key});

@@ -56,53 +56,51 @@ class TaskDetailsBody extends StatelessWidget {
 
   bool canPop(BuildContext context) {
     final bloc = context.read<UpdateTaskBloc>();
-    print('Selected Priority: ${bloc.state.selectedPriority}');
-    print('Task Priority: ${task.priority}');
-    print('Selected Status: ${bloc.state.selectedProgressStatus}');
-    print('Task Status: ${task.status}');
 
-    if ((bloc.state.selectedPriority != null ||
-        bloc.state.selectedProgressStatus != null) &&
-        (bloc.state.selectedPriority != task.priority ||
-            bloc.state.selectedProgressStatus != task.status)) {
-      print('Unsaved changes detected.');
-      return true;
-    } else {
-      print('No unsaved changes.');
-      return false;
-    }
+    final hasPriorityChanged = bloc.state.selectedPriority != null &&
+        bloc.state.selectedPriority != task.priority;
+    final hasStatusChanged = bloc.state.selectedProgressStatus != null &&
+        bloc.state.selectedProgressStatus != task.status;
+
+    return hasPriorityChanged || hasStatusChanged;
   }
-
 
   void _confirmGoBack(BuildContext context) {
     final bloc = context.read<UpdateTaskBloc>();
-    context.confirmAction(
-      cancel: () {
-        context.pop();
-      },
-      fn: () {
-        bloc.add(
-          UpdateTaskRequestedWithImage(
-            taskId: task.id,
-            data: UpdateTaskRequest(
-              priority: bloc.state.selectedPriority ?? task.priority,
-              status: bloc.state.selectedProgressStatus ?? task.status,
+    if (canPop(context)) {
+      context.confirmAction(
+        cancel: () {
+          /// here if user clicks on cancel, we will pop the dialog without updating the task
+          context.pop();
+        },
+        fn: () {
+          /// here if the user clicks on yes, we will update the task and navigate back
+          bloc.add(
+            UpdateTaskRequestedWithImage(
+              taskId: task.id,
+              data: UpdateTaskRequest(
+                priority: bloc.state.selectedPriority ?? task.priority,
+                status: bloc.state.selectedProgressStatus ?? task.status,
+              ),
             ),
-          ),
-        );
-        context.pop();
-      },
-      title: 'You have unsaved changes. Do you want to save them?',
-      content: 'Save changes and go back?',
-      noText: 'No',
-      yesText: 'Yes',
-      yesTextStyle: AppTextStyles.font14WeightRegular.copyWith(
-        color: AppColors.primaryColor,
-      ),
-      noTextStyle: AppTextStyles.font14WeightRegular.copyWith(
-        color: AppColors.errorRedColor,
-      ),
-    );
+          );
+          context.pop();
+        },
+        title: 'You have unsaved changes. Do you want to save them?',
+        content: 'Save changes and go back?',
+        noText: 'No',
+        yesText: 'Yes',
+        yesTextStyle: AppTextStyles.font14WeightRegular.copyWith(
+          color: AppColors.primaryColor,
+        ),
+        noTextStyle: AppTextStyles.font14WeightRegular.copyWith(
+          color: AppColors.errorRedColor,
+        ),
+      );
+    } else {
+      /// if the user has not made any changes, we will just pop the context
+      context.pop();
+    }
   }
 
   @override
@@ -117,6 +115,7 @@ class TaskDetailsBody extends StatelessWidget {
         appBar: CustomAppBar(
           appBarTitle: 'Task Details',
           onBack: () => _confirmGoBack(context),
+          task: task,
         ),
         body: SingleChildScrollView(
           child: Column(

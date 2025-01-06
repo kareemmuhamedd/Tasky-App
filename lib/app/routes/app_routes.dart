@@ -7,6 +7,7 @@ import 'package:tasky_app/features/home/view/screens/home_screen.dart';
 import 'package:tasky_app/features/home/view/screens/scan_task_qr_code_screen.dart';
 import 'package:tasky_app/features/onboarding/onboarding_screen.dart';
 import 'package:tasky_app/features/splash/view/splash_screen.dart';
+import 'package:tasky_app/features/update_task/view/screens/update_task_screen.dart';
 
 import '../../features/auth/view/auth_screen.dart';
 import '../../features/create_task/model/task_model.dart';
@@ -21,6 +22,7 @@ abstract class AppRoutesPaths {
   static const String kTaskDetailsScreen = '/task-details-screen';
   static const String kCreateTaskScreen = '/create-task-screen';
   static const String kScanQRCodeScreen = '/scan-qr-code-screen';
+  static const String kUpdateTaskScreen = '/update-task-screen';
 }
 
 class AppRoutes {
@@ -75,6 +77,16 @@ class AppRoutes {
           path: AppRoutesPaths.kScanQRCodeScreen,
           name: AppRoutesPaths.kScanQRCodeScreen,
           builder: (context, state) => const ScanTaskQrCodeScreen(),
+        ),
+        GoRoute(
+          path: AppRoutesPaths.kUpdateTaskScreen,
+          name: AppRoutesPaths.kUpdateTaskScreen,
+          builder: (context, state) {
+            final task = state.extra as TaskModel;
+            return UpdateTaskScreen(
+              task: task,
+            );
+          },
         ),
       ],
       redirect: (context, state) {
