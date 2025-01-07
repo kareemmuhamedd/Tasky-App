@@ -91,33 +91,16 @@ class AppRoutes {
       ],
       redirect: (context, state) {
         final appStatus = appBloc.state.status;
+        print('AppStatus: $appStatus');
         final authenticated = appStatus == AppStatus.authenticated;
         final authenticating =
             state.matchedLocation == AppRoutesPaths.kAuthScreen;
         final isInHome = state.matchedLocation == AppRoutesPaths.kHomeScreen;
+        final isOnboarding = appStatus == AppStatus.onboardingRequired;
         if (isInHome && !authenticated) return AppRoutesPaths.kAuthScreen;
         if (!authenticated) return AppRoutesPaths.kAuthScreen;
         if (authenticated && authenticating) return AppRoutesPaths.kHomeScreen;
-        return null;
-        //Wait for initialization to complete
-        if (appStatus == AppStatus.initial) {
-          return AppRoutesPaths.kSplashScreen;
-        }
-
-        if (appStatus == AppStatus.authenticated) {
-          return AppRoutesPaths.kHomeScreen;
-        }
-
-        if (appStatus == AppStatus.unauthenticated &&
-            state.uri.toString() != AppRoutesPaths.kAuthScreen) {
-          return AppRoutesPaths.kAuthScreen;
-        }
-
-        if (appStatus == AppStatus.onboardingRequired &&
-            state.uri.toString() != AppRoutesPaths.kOnboarding) {
-          return AppRoutesPaths.kOnboarding;
-        }
-
+        if(isOnboarding) return AppRoutesPaths.kOnboarding;
         return null;
       },
       refreshListenable: notifier,

@@ -1,4 +1,6 @@
-class UserModel {
+import 'package:equatable/equatable.dart';
+
+class UserModel extends Equatable {
   final String id;
   final String displayName;
   final String username;
@@ -11,7 +13,7 @@ class UserModel {
   final String updatedAt;
   final int v;
 
-  UserModel({
+  const UserModel({
     required this.id,
     required this.displayName,
     required this.username,
@@ -68,4 +70,19 @@ class UserModel {
       v: v ?? this.v,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        displayName,
+        username,
+        roles,
+        active,
+        experienceYears,
+        address,
+        level,
+        createdAt,
+        updatedAt,
+        v,
+      ];
 }
