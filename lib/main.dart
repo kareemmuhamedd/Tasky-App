@@ -9,7 +9,7 @@ void main() async {
   await SharedPrefHelper.instance.init();
   runApp(
     DevicePreview(
-      enabled: false,
+      enabled: true,
       builder: (context) => const App(),
     ),
   );

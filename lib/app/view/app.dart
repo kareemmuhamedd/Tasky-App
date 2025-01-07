@@ -10,18 +10,23 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isAnonymous() {
-      final accessToken = SharedPrefHelper.instance.getString('access_token');
-      final refreshToken = SharedPrefHelper.instance.getString('refresh_token');
-      if (accessToken == null || refreshToken == null) {
-        return true;
-      }
-      return false;
+    final isOnboardingCompleted =
+        SharedPrefHelper.instance.getBool('onboarding_completed') ?? false;
+    final accessToken = SharedPrefHelper.instance.getString('access_token');
+    final refreshToken = SharedPrefHelper.instance.getString('refresh_token');
+
+    final AppState initialState;
+    if (!isOnboardingCompleted) {
+      initialState = const AppState.onboardingRequired();
+    } else if (accessToken != null && refreshToken != null) {
+      initialState = const AppState.authenticated();
+    } else {
+      initialState = const AppState.unauthenticated();
     }
 
     return BlocProvider(
       create: (context) {
-        final appBloc = AppBloc(isAnonymous: isAnonymous());
+        final appBloc = AppBloc(initialState: initialState);
         appBloc.initialize();
         return appBloc;
       },

@@ -97,10 +97,11 @@ class AppRoutes {
             state.matchedLocation == AppRoutesPaths.kAuthScreen;
         final isInHome = state.matchedLocation == AppRoutesPaths.kHomeScreen;
         final isOnboarding = appStatus == AppStatus.onboardingRequired;
+        if(isOnboarding) return AppRoutesPaths.kOnboarding;
         if (isInHome && !authenticated) return AppRoutesPaths.kAuthScreen;
         if (!authenticated) return AppRoutesPaths.kAuthScreen;
         if (authenticated && authenticating) return AppRoutesPaths.kHomeScreen;
-        if(isOnboarding) return AppRoutesPaths.kOnboarding;
+
         return null;
       },
       refreshListenable: notifier,

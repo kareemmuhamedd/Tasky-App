@@ -8,15 +8,11 @@ part 'app_event.dart';
 part 'app_state.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
-  AppBloc({required bool isAnonymous})
-      : super(isAnonymous
-            ? const AppState.unauthenticated()
-            : const AppState.authenticated()) {
+  AppBloc({required AppState initialState}) : super(initialState) {
     on<CheckOnboardingStatus>(_onCheckOnboardingStatus);
     on<CompleteOnboarding>(_onCompleteOnboarding);
     on<AppLogoutRequested>(_onLogoutRequested);
 
-    // Trigger the initial state resolution
     add(const CheckOnboardingStatus());
   }
 
