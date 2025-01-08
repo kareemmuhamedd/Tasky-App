@@ -72,8 +72,9 @@ class _LoginViewState extends State<LoginView> {
                         onPressed: () {
                           context.read<LoginCubit>().onSubmitted(
                                 data: LoginModel(
-                                  phone: state.phoneNumber,
-                                  password: state.password,
+                                  phone: state.phoneNumber.countryCode +
+                                      state.phoneNumber.value,
+                                  password: state.password.value,
                                 ),
                               );
                         },

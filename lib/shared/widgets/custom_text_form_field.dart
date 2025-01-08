@@ -18,7 +18,8 @@ class CustomTextFormField extends StatelessWidget {
   final bool? readOnly;
   final void Function()? onTap;
   final FocusNode? focusNode;
-  final bool isMultiLine; // New variable
+  final bool isMultiLine;
+  final String? errorText;
 
   const CustomTextFormField({
     super.key,
@@ -36,7 +37,8 @@ class CustomTextFormField extends StatelessWidget {
     this.readOnly = false,
     this.onTap,
     this.focusNode,
-    this.isMultiLine = false, // Default value
+    this.isMultiLine = false,
+    this.errorText,
   });
 
   @override
@@ -56,6 +58,7 @@ class CustomTextFormField extends StatelessWidget {
           hintText: hintText,
           hintStyle: hintStyle ?? AppTextStyles.font14WeightRegular,
           contentPadding: contentPadding,
+          errorText: errorText,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.r),
             borderSide: const BorderSide(

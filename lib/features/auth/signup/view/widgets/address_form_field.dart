@@ -33,7 +33,11 @@ class _AddressFromFieldState extends State<AddressFromField> {
 
   @override
   Widget build(BuildContext context) {
+    final addressError = context.select(
+      (SignupCubit cubit) => cubit.state.address.errorMessage,
+    );
     return CustomTextFormField(
+      errorText: addressError,
       contentPadding: const EdgeInsets.only(left: 15),
       hintText: 'Address...',
       controller: _addressController,

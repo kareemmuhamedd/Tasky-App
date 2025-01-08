@@ -38,6 +38,8 @@ dependencies:
   mobile_scanner: ^6.0.2
   pretty_qr_code: ^3.3.0
   flutter_image_compress: ^2.4.0
+  formz: ^0.4.1
+  flutter_libphonenumber: ^2.5.0
 
 dev_dependencies:
   flutter_test:

@@ -74,13 +74,16 @@ class SignupView extends StatelessWidget {
                         onPressed: () {
                           context.read<SignupCubit>().onSubmitted(
                                 data: SignupModel(
-                                  phone: state.phoneNumber,
-                                  password: state.password,
-                                  displayName: state.name,
-                                  experienceYears:
-                                      int.parse(state.yearsOfExperience),
-                                  address: state.address,
-                                  level: state.experienceLevel,
+                                  phone: state.phoneNumber.countryCode +
+                                      state.phoneNumber.value,
+                                  password: state.password.value,
+                                  displayName: state.name.value,
+                                  experienceYears: int.tryParse(
+                                        state.yearsOfExperience.value,
+                                      ) ??
+                                      0,
+                                  address: state.address.value,
+                                  level: state.experienceLevel.value,
                                 ),
                               );
                         },
