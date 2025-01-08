@@ -6,6 +6,7 @@ import 'package:tasky_app/features/create_task/view/screens/create_task_screen.d
 import 'package:tasky_app/features/home/view/screens/home_screen.dart';
 import 'package:tasky_app/features/home/view/screens/scan_task_qr_code_screen.dart';
 import 'package:tasky_app/features/onboarding/onboarding_screen.dart';
+import 'package:tasky_app/features/profile/view/screens/profile_screen.dart';
 import 'package:tasky_app/features/splash/view/splash_screen.dart';
 import 'package:tasky_app/features/update_task/view/screens/update_task_screen.dart';
 
@@ -23,6 +24,7 @@ abstract class AppRoutesPaths {
   static const String kCreateTaskScreen = '/create-task-screen';
   static const String kScanQRCodeScreen = '/scan-qr-code-screen';
   static const String kUpdateTaskScreen = '/update-task-screen';
+  static const String kProfileScreen = '/profile-screen';
 }
 
 class AppRoutes {
@@ -73,11 +75,13 @@ class AppRoutes {
           name: AppRoutesPaths.kCreateTaskScreen,
           builder: (context, state) => const CreateTaskScreen(),
         ),
+        // Scan QR Code Route
         GoRoute(
           path: AppRoutesPaths.kScanQRCodeScreen,
           name: AppRoutesPaths.kScanQRCodeScreen,
           builder: (context, state) => const ScanTaskQrCodeScreen(),
         ),
+        // Update Task Route
         GoRoute(
           path: AppRoutesPaths.kUpdateTaskScreen,
           name: AppRoutesPaths.kUpdateTaskScreen,
@@ -86,6 +90,14 @@ class AppRoutes {
             return UpdateTaskScreen(
               task: task,
             );
+          },
+        ),
+        // Profile Route
+        GoRoute(
+          path: AppRoutesPaths.kProfileScreen,
+          name: AppRoutesPaths.kProfileScreen,
+          builder: (context, state) {
+            return const ProfileScreen();
           },
         ),
       ],
@@ -97,7 +109,7 @@ class AppRoutes {
             state.matchedLocation == AppRoutesPaths.kAuthScreen;
         final isInHome = state.matchedLocation == AppRoutesPaths.kHomeScreen;
         final isOnboarding = appStatus == AppStatus.onboardingRequired;
-        if(isOnboarding) return AppRoutesPaths.kOnboarding;
+        if (isOnboarding) return AppRoutesPaths.kOnboarding;
         if (isInHome && !authenticated) return AppRoutesPaths.kAuthScreen;
         if (!authenticated) return AppRoutesPaths.kAuthScreen;
         if (authenticated && authenticating) return AppRoutesPaths.kHomeScreen;

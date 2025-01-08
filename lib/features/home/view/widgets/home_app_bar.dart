@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tasky_app/app/routes/app_routes.dart';
 import 'package:tasky_app/shared/assets/icons.dart';
 import 'package:tasky_app/shared/typography/app_text_styles.dart';
+
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({
     super.key,
@@ -29,7 +32,7 @@ class HomeAppBar extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    // todo: handel the functionality of navigating to user profile
+                    context.pushNamed(AppRoutesPaths.kProfileScreen);
                   },
                   child: SvgPicture.asset(AppIcons.circleUserIcon),
                 ),
