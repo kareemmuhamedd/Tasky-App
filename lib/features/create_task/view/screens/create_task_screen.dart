@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:tasky_app/features/create_task/view/widgets/due_date_form_field.dart';
 import 'package:tasky_app/features/create_task/view/widgets/priority_form_field.dart';
+import 'package:tasky_app/features/home/viewmodel/bloc/home_bloc.dart';
 import 'package:tasky_app/shared/widgets/task_title_form_field.dart';
 import 'package:tasky_app/shared/widgets/app_button.dart';
 import 'package:tasky_app/shared/widgets/custom_app_bar.dart';
@@ -20,8 +21,15 @@ class CreateTaskScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: serviceLocator<CreateTaskBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(
+          value: serviceLocator<CreateTaskBloc>(),
+        ),
+        BlocProvider.value(
+          value: serviceLocator<HomeBloc>(),
+        ),
+      ],
       child: const CreateTaskBody(),
     );
   }
@@ -42,7 +50,13 @@ class CreateTaskBody extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 24),
-          child: BlocBuilder<CreateTaskBloc, CreateTaskState>(
+          child: BlocConsumer<CreateTaskBloc, CreateTaskState>(
+            listener: (context, state) {
+              if (state.status == CreateTaskStatus.success) {
+                context.read<HomeBloc>().add(const AllTasksRequested());
+                Navigator.of(context).pop();
+              }
+            },
             builder: (context, state) {
               final isLoading = state.status == CreateTaskStatus.loading;
               return Column(

@@ -6,8 +6,8 @@ import 'app/view/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  initDependencies();
   await SharedPrefHelper.instance.init();
+  await initDependencies();
   runApp(
     DevicePreview(
       enabled: false,

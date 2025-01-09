@@ -27,8 +27,21 @@ final class ResetTaskRequested extends HomeEvent {
   const ResetTaskRequested();
 }
 
-final class DeleteTaskRequested extends HomeEvent {
-  final String id;
+final class RemoveTaskFromUI extends HomeEvent {
+  final String taskId;
 
-  const DeleteTaskRequested(this.id);
+  const RemoveTaskFromUI(this.taskId);
+}
+
+final class UndoTaskDeletion extends HomeEvent {
+  final TaskModel task;
+  final int index; // Original position of the task
+
+  const UndoTaskDeletion(this.task, this.index);
+}
+
+final class DeleteTaskRequested extends HomeEvent {
+  final String taskId;
+
+  const DeleteTaskRequested(this.taskId);
 }

@@ -46,12 +46,12 @@ void _initAuthRegistration() {
   );
 
   /// Register Cubits of Auth
-  serviceLocator.registerLazySingleton<LoginCubit>(
+  serviceLocator.registerFactory<LoginCubit>(
     () => LoginCubit(
       loginRemoteRepository: serviceLocator<LoginRemoteRepository>(),
     ),
   );
-  serviceLocator.registerLazySingleton<SignupCubit>(
+  serviceLocator.registerFactory<SignupCubit>(
     () => SignupCubit(
       signupRemoteRepository: serviceLocator<SignupRemoteRepository>(),
     ),
@@ -69,7 +69,7 @@ void _initHomeRegistration() {
   /// Register Blocs of Home
   serviceLocator.registerLazySingleton<HomeBloc>(
     () => HomeBloc(
-      homeRepository: serviceLocator<HomeRemoteRepository>(),
+      homeRemoteRepository: serviceLocator<HomeRemoteRepository>(),
       deleteTaskRemoteRepository: serviceLocator<DeleteTaskRemoteRepository>(),
     ),
   );
@@ -93,7 +93,7 @@ void _initCreateTaskRegistration() {
   );
 
   /// Register Blocs of CreateTask
-  serviceLocator.registerLazySingleton<CreateTaskBloc>(
+  serviceLocator.registerFactory<CreateTaskBloc>(
     () => CreateTaskBloc(
       createTaskRepository: serviceLocator<CreateTaskRepository>(),
     ),
@@ -109,7 +109,7 @@ void _initProfileRegistration() {
   );
 
   /// Register Blocs of Profile
-  serviceLocator.registerLazySingleton<ProfileBloc>(
+  serviceLocator.registerFactory<ProfileBloc>(
     () => ProfileBloc(
       profileRemoteRepository: serviceLocator<ProfileRemoteRepository>(),
     ),
@@ -125,7 +125,7 @@ void _initUpdateTaskRegistration() {
   );
 
   /// Register Blocs of UpdateTask
-  serviceLocator.registerLazySingleton<UpdateTaskBloc>(
+  serviceLocator.registerFactory<UpdateTaskBloc>(
     () => UpdateTaskBloc(
       updateTaskRemoteRepository: serviceLocator<UpdateTaskRemoteRepository>(),
       createTaskRepository: serviceLocator<CreateTaskRepository>(),

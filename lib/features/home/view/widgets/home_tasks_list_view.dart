@@ -167,23 +167,69 @@ class HomeTasksListView extends StatelessWidget {
                             child: GestureDetector(
                               onTap: () {
                                 showCustomModalBottomSheet(
-                                    context: context,
-                                    options: [
-                                      'Edit',
-                                      'Delete',
-                                    ],
-                                    onOptionSelected: (selected) {
-                                      if (selected == 'Edit') {
-                                        context.pushNamed(
-                                          AppRoutesPaths.kUpdateTaskScreen,
-                                          extra: task,
-                                        );
-                                      } else {
-                                        // todo Handle delete action
-                                      }
-                                    });
+                                  context: context,
+                                  options: [
+                                    'Edit',
+                                    'Delete',
+                                  ],
+                                  onOptionSelected: (selected) {
+                                    if (selected == 'Edit') {
+                                      context.pushNamed(
+                                        AppRoutesPaths.kUpdateTaskScreen,
+                                        extra: task,
+                                      );
+                                    } else {
+                                      final homeBloc = context.read<HomeBloc>();
+                                      final taskIndex =
+                                          index; // Track the task's index before removing it
+
+                                      // Temporarily remove the task from the UI
+                                      homeBloc.add(RemoveTaskFromUI(task.id));
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Task deleted. Undo?',
+                                            style: AppTextStyles
+                                                .font14WeightRegular
+                                                .copyWith(color: Colors.white),
+                                          ),
+                                          duration: const Duration(seconds: 6),
+                                          action: SnackBarAction(
+                                            label: 'Undo',
+                                            textColor:
+                                                AppColors.lightOrangeColor,
+                                            onPressed: () {
+                                              // Dispatch event to undo deletion and restore the task to its original position
+                                              homeBloc.add(UndoTaskDeletion(
+                                                  task, taskIndex));
+                                            },
+                                          ),
+                                          backgroundColor: AppColors.blackColor,
+                                        ),
+                                      );
+
+                                      // Wait 6 seconds and permanently delete the task if undo is not pressed
+                                      Future.delayed(const Duration(seconds: 6),
+                                          () {
+                                        final currentState = homeBloc.state;
+                                        final isTaskStillDeleted = !currentState
+                                            .tasks
+                                            .any((t) => t.id == task.id);
+
+                                        if (isTaskStillDeleted) {
+                                          homeBloc.add(
+                                              DeleteTaskRequested(task.id));
+                                        }
+                                      });
+                                    }
+                                  },
+                                );
                               },
-                              child: SvgPicture.asset(AppIcons.verticalDotIcon),
+                              child: SvgPicture.asset(
+                                AppIcons.verticalDotIcon,
+                              ),
                             ),
                           ),
                         ),

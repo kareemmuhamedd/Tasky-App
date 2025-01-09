@@ -38,27 +38,33 @@ class HomeBody extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 22.w),
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'My Tasks',
-                    style: AppTextStyles.font16WeightBold
-                        .copyWith(color: AppColors.blackColor.withOpacity(0.6)),
-                  ),
-                  const SizedBox(height: 16),
-                  const CustomHomeTabBar(),
-                ],
+        child: RefreshIndicator(
+          onRefresh: () async {
+            context.read<HomeBloc>().add(const AllTasksRequested());
+            context.read<HomeBloc>().add(const HomeFilterChanged(0));
+          },
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'My Tasks',
+                      style: AppTextStyles.font16WeightBold.copyWith(
+                          color: AppColors.blackColor.withOpacity(0.6)),
+                    ),
+                    const SizedBox(height: 16),
+                    const CustomHomeTabBar(),
+                  ],
+                ),
               ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 16),
-            ),
-            const HomeTasksListView(),
-          ],
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 16),
+              ),
+              const HomeTasksListView(),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Column(
