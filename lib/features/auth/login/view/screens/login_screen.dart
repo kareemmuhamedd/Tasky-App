@@ -6,6 +6,7 @@ import 'package:tasky_app/app/bloc/app_bloc.dart';
 import 'package:tasky_app/features/auth/login/model/login_model.dart';
 import 'package:tasky_app/features/auth/login/view/widgets/login_form.dart';
 import 'package:tasky_app/shared/theme/app_colors.dart';
+import 'package:tasky_app/shared/utils/snack_bars/custom_snack_bar.dart';
 import 'package:tasky_app/shared/widgets/app_button.dart';
 
 import '../../../../../shared/assets/images.dart';
@@ -62,6 +63,12 @@ class _LoginViewState extends State<LoginView> {
                         context
                             .read<AppBloc>()
                             .add(const CheckOnboardingStatus());
+                      } else if (state.status == LogInSubmissionStatus.error) {
+                        showCustomSnackBar(
+                          context,
+                          state.message,
+                          isError: true,
+                        );
                       }
                     },
                     builder: (context, state) {

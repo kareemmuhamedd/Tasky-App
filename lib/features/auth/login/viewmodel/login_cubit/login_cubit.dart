@@ -71,8 +71,9 @@ class LoginCubit extends Cubit<LoginState> {
       (failure) {
         emit(state.copyWith(
           status: LogInSubmissionStatus.error,
-          message: failure.message,
+          message: 'Invalid phone number or password',
         ));
+        emit(state.copyWith(status: LogInSubmissionStatus.idle));
       },
       (response) async {
         await SharedPrefHelper.instance
@@ -83,6 +84,7 @@ class LoginCubit extends Cubit<LoginState> {
         emit(state.copyWith(
           status: LogInSubmissionStatus.success,
         ));
+        emit(state.copyWith(status: LogInSubmissionStatus.idle));
       },
     );
   }

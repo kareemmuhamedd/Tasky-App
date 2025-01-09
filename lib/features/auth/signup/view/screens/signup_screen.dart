@@ -10,6 +10,7 @@ import '../../../../../app/bloc/app_bloc.dart';
 import '../../../../../shared/assets/images.dart';
 import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/typography/app_text_styles.dart';
+import '../../../../../shared/utils/snack_bars/custom_snack_bar.dart';
 import '../../../../../shared/widgets/app_button.dart';
 import '../../../cubit/auth_cubit.dart';
 import '../../model/signup_model.dart';
@@ -64,6 +65,9 @@ class SignupView extends StatelessWidget {
                         context
                             .read<AppBloc>()
                             .add(const CheckOnboardingStatus());
+                      }
+                      else if(state.status == SignupSubmissionStatus.error){
+                        showCustomSnackBar(context, state.message,isError: true);
                       }
                     },
                     builder: (context, state) {

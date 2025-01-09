@@ -137,8 +137,6 @@ class SignupCubit extends Cubit<SignupState> {
 
     final isFormValid =
         FormzValid([name, phone, password, years, level, address]).isFormValid;
-    print(years.value);
-    print(address.value);
     final newState = state.copyWith(
       name: name,
       phoneNumber: phone,
@@ -156,8 +154,9 @@ class SignupCubit extends Cubit<SignupState> {
       (failure) {
         emit(state.copyWith(
           status: SignupSubmissionStatus.error,
-          message: failure.message,
+          message: 'This phone number is already registered with another user',
         ));
+        emit(state.copyWith(status: SignupSubmissionStatus.idle));
       },
       (response) async {
         await SharedPrefHelper.instance
@@ -167,6 +166,7 @@ class SignupCubit extends Cubit<SignupState> {
         emit(state.copyWith(
           status: SignupSubmissionStatus.success,
         ));
+        emit(state.copyWith(status: SignupSubmissionStatus.idle));
       },
     );
   }
