@@ -5,15 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasky_app/features/create_task/model/task_model.dart';
-import 'package:tasky_app/features/create_task/repositories/create_task_repository.dart';
-import 'package:tasky_app/features/update_task/repositories/update_task_remote_repository.dart';
 import 'package:tasky_app/features/update_task/viewmodel/bloc/update_task_bloc.dart';
 import 'package:tasky_app/shared/assets/icons.dart';
-import 'package:tasky_app/shared/networking/dio_factory.dart';
 import 'package:tasky_app/shared/typography/app_text_styles.dart';
 import 'package:tasky_app/shared/utils/extensions/show_dialog_extension.dart';
 import 'package:tasky_app/shared/widgets/custom_app_bar.dart';
 import 'package:tasky_app/shared/widgets/custom_tile_widget.dart';
+import '../../../../app/di/init_dependencies.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../update_task/models/update_task_request.dart';
 import '../widgets/task_priority.dart';
@@ -30,15 +28,8 @@ class TaskDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => UpdateTaskBloc(
-        updateTaskRemoteRepository: UpdateTaskRemoteRepository(
-          dio: DioFactory.getDio(),
-        ),
-        createTaskRepository: CreateTaskRepository(
-          dio: DioFactory.getDio(),
-        ),
-      ),
+    return BlocProvider.value(
+      value: serviceLocator<UpdateTaskBloc>(),
       child: TaskDetailsBody(
         task: task,
       ),
@@ -126,6 +117,34 @@ class TaskDetailsBody extends StatelessWidget {
                 color: AppColors.lightOrangeColor,
                 child: CachedNetworkImage(
                   imageUrl: task.image,
+                  errorWidget: (context, url, error) => Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.warning_rounded,
+                        color: AppColors.borderGreyColor,
+                        size: 40,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Unable to load image.',
+                        style: TextStyle(
+                          color: AppColors.blackColor,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Please try uploading a new one.',
+                        style: TextStyle(
+                          color: AppColors.blackColor,
+                          fontSize: 14.sp,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                   fit: BoxFit.cover,
                 ),
               ),

@@ -5,6 +5,7 @@ enum HomeStatus {
   loading,
   success,
   failure,
+  deleteSuccess,
 }
 
 class HomeState {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../theme/app_colors.dart';
+import 'custom_app_bottom_sheet.dart';
 
 class CustomTileWidget extends StatelessWidget {
   const CustomTileWidget({
@@ -17,49 +18,16 @@ class CustomTileWidget extends StatelessWidget {
   final List<String>? options;
   final ValueChanged<String>? onOptionSelected;
 
-  void _showCustomModalBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return SafeArea(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-            decoration: const BoxDecoration(
-              color: AppColors.lightPurpleColor,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: options!.map(
-                (option) {
-                  return ListTile(
-                    title: Text(
-                      option,
-                      style: TextStyle(fontSize: 16.sp),
-                    ),
-                    onTap: () {
-                      onOptionSelected != null
-                          ? onOptionSelected!(option)
-                          : null;
-                      Navigator.pop(context);
-                    },
-                  );
-                },
-              ).toList(),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
-          options == null ? null : _showCustomModalBottomSheet(context),
+      onTap: () => options == null
+          ? null
+          : showCustomModalBottomSheet(
+              context: context,
+              options: options,
+              onOptionSelected: onOptionSelected,
+            ),
       child: Container(
         height: 50.h,
         width: double.infinity,

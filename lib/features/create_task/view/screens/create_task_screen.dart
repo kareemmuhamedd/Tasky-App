@@ -4,15 +4,12 @@ import 'package:intl/intl.dart';
 import 'package:tasky_app/features/create_task/view/widgets/due_date_form_field.dart';
 import 'package:tasky_app/features/create_task/view/widgets/priority_form_field.dart';
 import 'package:tasky_app/shared/widgets/task_title_form_field.dart';
-import 'package:tasky_app/shared/networking/dio_factory.dart';
 import 'package:tasky_app/shared/widgets/app_button.dart';
-
 import 'package:tasky_app/shared/widgets/custom_app_bar.dart';
-
+import '../../../../app/di/init_dependencies.dart';
 import '../../../../shared/typography/app_text_styles.dart';
 import '../../../../shared/utils/snack_bars/custom_snack_bar.dart';
 import '../../model/create_task_request.dart';
-import '../../repositories/create_task_repository.dart';
 import '../../viewmodel/bloc/create_task_bloc.dart';
 import '../widgets/custom_add_task_field_with_header.dart';
 import '../widgets/custom_task_add_image_widget.dart';
@@ -23,12 +20,8 @@ class CreateTaskScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CreateTaskBloc(
-        createTaskRepository: CreateTaskRepository(
-          dio: DioFactory.getDio(),
-        ),
-      ),
+    return BlocProvider.value(
+      value: serviceLocator<CreateTaskBloc>(),
       child: const CreateTaskBody(),
     );
   }

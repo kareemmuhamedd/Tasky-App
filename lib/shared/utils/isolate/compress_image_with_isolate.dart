@@ -31,7 +31,7 @@ Future<File?> compressImage({
   required int targetSizeKB,
 }) async {
   final targetBytes = targetSizeKB * 1024;
-  int quality = 95; // Start with high quality
+  int quality = 95; /// Start with high quality
 
   File? compressedFile;
 
@@ -50,8 +50,8 @@ Future<File?> compressImage({
       throw Exception('Compression failed.');
     }
 
-    compressedFile = File(compressedXFile.path); // Convert XFile to File
-    quality -= 5; // Decrease quality in steps if size not achieved
+    compressedFile = File(compressedXFile.path); /// Convert XFile to File
+    quality -= 5; /// Decrease quality in steps if size not achieved
   } while (compressedFile.lengthSync() > targetBytes && quality > 10);
 
   return compressedFile;

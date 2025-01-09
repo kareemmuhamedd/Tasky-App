@@ -22,6 +22,13 @@ final class GetTaskById extends HomeEvent {
 
   const GetTaskById(this.id);
 }
+
 final class ResetTaskRequested extends HomeEvent {
   const ResetTaskRequested();
+}
+
+final class DeleteTaskRequested extends HomeEvent {
+  final String id;
+
+  const DeleteTaskRequested(this.id);
 }

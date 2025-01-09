@@ -2,11 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:tasky_app/features/auth/signup/repositories/signup_remote_repository.dart';
 import 'package:tasky_app/features/auth/signup/view/widgets/signup_form.dart';
-import 'package:tasky_app/shared/networking/dio_factory.dart';
-
 import '../../../../../app/bloc/app_bloc.dart';
+import '../../../../../app/di/init_dependencies.dart';
 import '../../../../../shared/assets/images.dart';
 import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/typography/app_text_styles.dart';
@@ -21,12 +19,8 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SignupCubit(
-        signupRemoteRepository: SignupRemoteRepository(
-          dio: DioFactory.getDio(),
-        ),
-      ),
+    return BlocProvider.value(
+      value: serviceLocator<SignupCubit>(),
       child: const SignupView(),
     );
   }

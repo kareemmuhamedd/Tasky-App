@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tasky_app/features/create_task/model/task_model.dart';
+import 'package:tasky_app/features/delete_task/repositories/delete_task_repository.dart';
 import 'package:tasky_app/features/home/repositories/home_repository.dart';
 
 part 'home_event.dart';
@@ -8,8 +9,11 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc({required HomeRepository homeRepository})
+  HomeBloc(
+      {required HomeRemoteRepository homeRepository,
+      required DeleteTaskRemoteRepository deleteTaskRemoteRepository})
       : _homeRepository = homeRepository,
+        _deleteTaskRemoteRepository = deleteTaskRemoteRepository,
         super(const HomeState.initial()) {
     on<HomeFilterChanged>(_onFilterChanged);
     on<AllTasksRequested>(_onAllTasksRequested);
@@ -17,7 +21,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<ResetTaskRequested>(_resetTaskRequested);
   }
 
-  final HomeRepository _homeRepository;
+  final HomeRemoteRepository _homeRepository;
+  final DeleteTaskRemoteRepository _deleteTaskRemoteRepository;
 
   void _onFilterChanged(HomeFilterChanged event, Emitter<HomeState> emit) {
     emit(state.copyWith(selectedIndex: event.selectedIndex));
