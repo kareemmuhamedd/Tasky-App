@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tasky_app/app/routes/app_routes.dart';
+import 'package:tasky_app/features/update_task/viewmodel/bloc/update_task_bloc.dart';
 
 import '../../../../shared/assets/icons.dart';
+import '../../../../shared/networking/dio_factory.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/typography/app_text_styles.dart';
+import '../../../create_task/model/task_model.dart';
+import '../../../create_task/repositories/create_task_repository.dart';
+import '../../../update_task/repositories/update_task_remote_repository.dart';
+
 class CustomDropdownMenu extends StatefulWidget {
-  const CustomDropdownMenu({super.key});
+  const CustomDropdownMenu({
+    super.key,
+    required this.task,
+  });
+
+  final TaskModel task;
 
   @override
   State<CustomDropdownMenu> createState() => _CustomDropdownMenuState();
@@ -58,6 +72,11 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
                         GestureDetector(
                           onTap: () {
                             print('Edit pressed');
+                            _removeDropdown();
+                            context.pushNamed(
+                              AppRoutesPaths.kUpdateTaskScreen,
+                              extra: widget.task,
+                            );
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -78,6 +97,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
                         GestureDetector(
                           onTap: () {
                             print('Delete pressed');
+                            _removeDropdown();
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),

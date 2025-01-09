@@ -47,13 +47,13 @@ class LoginState {
           status: LogInSubmissionStatus.idle,
           message: '',
           showPassword: false,
-          phoneNumber: '',
-          password: '',
+          phoneNumber: const Phone.pure(),
+          password: const Password.pure(),
         );
 
   final LogInSubmissionStatus status;
-  final String phoneNumber;
-  final String password;
+  final Phone phoneNumber;
+  final Password password;
   final bool showPassword;
   final String message;
 
@@ -61,8 +61,8 @@ class LoginState {
     LogInSubmissionStatus? status,
     String? message,
     bool? showPassword,
-    String? phoneNumber,
-    String? password,
+    Phone? phoneNumber,
+    Password? password,
   }) {
     return LoginState._(
       status: status ?? this.status,

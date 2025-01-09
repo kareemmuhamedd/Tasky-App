@@ -17,7 +17,6 @@ enum AppStatus {
   onboardingRequired,
 }
 
-
 class AppState extends Equatable {
   const AppState({
     this.status = AppStatus.initial,
@@ -27,7 +26,12 @@ class AppState extends Equatable {
 
   const AppState.initial() : this(status: AppStatus.initial);
 
-  const AppState.onboardingRequired() : this(status: AppStatus.onboardingRequired);
+  const AppState.onboardingRequired()
+      : this(status: AppStatus.onboardingRequired);
+
+  const AppState.unauthenticated() : this(status: AppStatus.unauthenticated);
+
+  const AppState.authenticated() : this(status: AppStatus.authenticated);
 
   AppState copyWith({
     AppStatus? status,

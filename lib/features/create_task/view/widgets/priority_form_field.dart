@@ -40,7 +40,11 @@ class PriorityFormField extends StatelessWidget {
           ),
           options: const ['Low', 'Medium', 'High'],
           onOptionSelected: (selected) {
-            context.read<CreateTaskBloc>().add(PriorityChanged(selected));
+            context.read<CreateTaskBloc>().add(
+                  PriorityChanged(
+                    selected.toLowerCase(),
+                  ),
+                );
           },
         );
       },

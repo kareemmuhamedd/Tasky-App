@@ -17,8 +17,6 @@ class PhoneFormField extends StatefulWidget {
 class _PhoneFormFieldState extends State<PhoneFormField> {
   Country? _selectedCountry;
 
-  bool _isPhoneNumberValid = false;
-
   late TextEditingController _phoneNumberController;
 
   @override
@@ -28,7 +26,8 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
     _phoneNumberController.addListener(() {
       if (_phoneNumberController.text.isNotEmpty) {
         context.read<LoginCubit>().onPhoneNumberChanged(
-              _selectedCountry!.dialCode + _phoneNumberController.text,
+              _phoneNumberController.text,
+              _selectedCountry!.dialCode,
             );
       }
     });
@@ -40,23 +39,13 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
     super.dispose();
   }
 
-  Future<void> _validatePhoneNumber(String value, String countryCode) async {
-    try {
-      final isValid = await PhoneService.parsePhoneNumber(value, countryCode);
-      _isPhoneNumberValid = isValid ?? false;
-    } catch (e) {
-      _isPhoneNumberValid = false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final phoneError = context.select(
+      (LoginCubit cubit) => cubit.state.phoneNumber.errorMessage,
+    );
     return CustomTextFormField(
-      onChanged: (value) {
-        if (_selectedCountry != null) {
-          _validatePhoneNumber(value, _selectedCountry!.code);
-        }
-      },
+      errorText: phoneError,
       prefixIcon: CountryCodePicker(
         icon: const Icon(
           Icons.keyboard_arrow_down_rounded,

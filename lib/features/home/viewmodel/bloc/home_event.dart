@@ -1,7 +1,10 @@
 part of 'home_bloc.dart';
 
-sealed class HomeEvent {
+sealed class HomeEvent extends Equatable {
   const HomeEvent();
+
+  @override
+  List<Object?> get props => [];
 }
 
 final class HomeFilterChanged extends HomeEvent {
@@ -14,14 +17,11 @@ final class AllTasksRequested extends HomeEvent {
   const AllTasksRequested();
 }
 
-final class InProgressTasksRequested extends HomeEvent {
-  const InProgressTasksRequested();
-}
+final class GetTaskById extends HomeEvent {
+  final String id;
 
-final class WaitingTasksRequested extends HomeEvent {
-  const WaitingTasksRequested();
+  const GetTaskById(this.id);
 }
-
-final class FinishedTasksRequested extends HomeEvent {
-  const FinishedTasksRequested();
+final class ResetTaskRequested extends HomeEvent {
+  const ResetTaskRequested();
 }

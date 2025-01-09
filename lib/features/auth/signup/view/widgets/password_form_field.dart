@@ -35,10 +35,14 @@ class _PasswordFormFieldState extends State<PasswordFormField> {
 
   @override
   Widget build(BuildContext context) {
+    final passwordError = context.select(
+      (SignupCubit cubit) => cubit.state.password.errorMessage,
+    );
     final passwordVisible = context.select(
       (SignupCubit cubit) => cubit.state.showPassword,
     );
     return CustomTextFormField(
+      errorText: passwordError,
       contentPadding: const EdgeInsets.only(left: 15),
       hintText: 'Password...',
       suffixIcon: GestureDetector(

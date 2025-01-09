@@ -8,13 +8,13 @@ class CustomTileWidget extends StatelessWidget {
     super.key,
     required this.prefix,
     required this.suffix,
-    required this.options,
+    this.options,
     this.onOptionSelected,
   });
 
   final Widget prefix;
   final Widget suffix;
-  final List<String> options;
+  final List<String>? options;
   final ValueChanged<String>? onOptionSelected;
 
   void _showCustomModalBottomSheet(BuildContext context) {
@@ -32,7 +32,7 @@ class CustomTileWidget extends StatelessWidget {
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: options.map(
+              children: options!.map(
                 (option) {
                   return ListTile(
                     title: Text(
@@ -58,7 +58,8 @@ class CustomTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _showCustomModalBottomSheet(context),
+      onTap: () =>
+          options == null ? null : _showCustomModalBottomSheet(context),
       child: Container(
         height: 50.h,
         width: double.infinity,

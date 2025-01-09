@@ -39,7 +39,11 @@ class _YearsOfExperienceFormFieldState
 
   @override
   Widget build(BuildContext context) {
+    final yearsOfExperienceError = context.select(
+      (SignupCubit cubit) => cubit.state.yearsOfExperience.errorMessage,
+    );
     return CustomTextFormField(
+      errorText: yearsOfExperienceError,
       contentPadding: const EdgeInsets.only(left: 15),
       hintText: 'Years of experience...',
       controller: _yearsOfExperienceController,

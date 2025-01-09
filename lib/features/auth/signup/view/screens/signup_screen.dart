@@ -2,16 +2,17 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:tasky_app/app/routes/app_routes.dart';
 import 'package:tasky_app/features/auth/signup/repositories/signup_remote_repository.dart';
 import 'package:tasky_app/features/auth/signup/view/widgets/signup_form.dart';
 import 'package:tasky_app/shared/networking/dio_factory.dart';
 
+import '../../../../../app/bloc/app_bloc.dart';
 import '../../../../../shared/assets/images.dart';
 import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/typography/app_text_styles.dart';
+import '../../../../../shared/utils/snack_bars/custom_snack_bar.dart';
 import '../../../../../shared/widgets/app_button.dart';
+import '../../../cubit/auth_cubit.dart';
 import '../../model/signup_model.dart';
 import '../../viewmodel/signup_cubit/signup_cubit.dart';
 
@@ -58,7 +59,17 @@ class SignupView extends StatelessWidget {
                   const SizedBox(
                     height: 24,
                   ),
-                  BlocBuilder<SignupCubit, SignupState>(
+                  BlocConsumer<SignupCubit, SignupState>(
+                    listener: (context, state) {
+                      if (state.status == SignupSubmissionStatus.success) {
+                        context
+                            .read<AppBloc>()
+                            .add(const CheckOnboardingStatus());
+                      }
+                      else if(state.status == SignupSubmissionStatus.error){
+                        showCustomSnackBar(context, state.message,isError: true);
+                      }
+                    },
                     builder: (context, state) {
                       final isLoading =
                           state.status == SignupSubmissionStatus.loading;
@@ -67,13 +78,16 @@ class SignupView extends StatelessWidget {
                         onPressed: () {
                           context.read<SignupCubit>().onSubmitted(
                                 data: SignupModel(
-                                  phone: state.phoneNumber,
-                                  password: state.password,
-                                  displayName: state.name,
-                                  experienceYears:
-                                      int.parse(state.yearsOfExperience),
-                                  address: state.address,
-                                  level: state.experienceLevel,
+                                  phone: state.phoneNumber.countryCode +
+                                      state.phoneNumber.value,
+                                  password: state.password.value,
+                                  displayName: state.name.value,
+                                  experienceYears: int.tryParse(
+                                        state.yearsOfExperience.value,
+                                      ) ??
+                                      0,
+                                  address: state.address.value,
+                                  level: state.experienceLevel.value,
                                 ),
                               );
                         },
@@ -103,7 +117,8 @@ class SignupView extends StatelessWidget {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                context.go(AppRoutesPaths.kLoginScreen);
+                                final cubit = context.read<AuthCubit>();
+                                cubit.changeAuth(showLogin: true);
                               },
                           ),
                         ],

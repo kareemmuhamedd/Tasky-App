@@ -9,6 +9,8 @@ import 'package:tasky_app/shared/utils/local_storage/shared_pref_service.dart';
 import '../../../shared/error/custom_error_handler.dart';
 import '../../../shared/networking/api_constants.dart';
 
+import '../../../shared/utils/isolate/compress_image_with_isolate.dart';
+
 class CreateTaskRepository {
   CreateTaskRepository({
     required Dio dio,
@@ -19,13 +21,25 @@ class CreateTaskRepository {
     required String imagePath,
   }) async {
     try {
+      // Compress the image using the new compressImage function
+      final compressedFile = await compressImage(
+        filePath: imagePath,
+        targetSizeKB: 500, // Set target size to 500 KB
+      );
+
+      if (compressedFile == null) {
+        throw Exception('Image compression failed.');
+      }
+
+      // Create FormData with the compressed image
       final formData = FormData.fromMap({
         'image': await MultipartFile.fromFile(
-          imagePath,
-          contentType: MediaType('image', 'jpg'),
+          compressedFile.path,
+          contentType: MediaType('image', 'jpeg'), // Adjust format as needed
         ),
       });
 
+      // Upload the image
       final response = await _dio.post(
         '${ApiConstants.baseUrl}/upload/image',
         data: formData,

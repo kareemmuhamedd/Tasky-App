@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class CreateTaskRequest {
   final String image;
   final String title;

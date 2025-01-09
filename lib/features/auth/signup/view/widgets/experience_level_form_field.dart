@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/typography/app_text_styles.dart';
+import '../../../../../shared/utils/data/expreience_level.dart';
 import '../../../../../shared/widgets/custom_text_form_field.dart';
 import '../../viewmodel/signup_cubit/signup_cubit.dart';
 
@@ -18,12 +19,7 @@ class _ExperienceLevelFormFieldState extends State<ExperienceLevelFormField> {
   String? _selectedExperienceLevel;
   late TextEditingController _experienceLevelController;
 
-  final List<String> _experienceLevels = [
-    'fresh',
-    'junior',
-    'midLevel',
-    'senior',
-  ];
+
 
   @override
   void initState() {
@@ -47,14 +43,18 @@ class _ExperienceLevelFormFieldState extends State<ExperienceLevelFormField> {
 
   @override
   Widget build(BuildContext context) {
+    final experienceLevelError = context.select(
+      (SignupCubit cubit) => cubit.state.experienceLevel.errorMessage,
+    );
     return CustomTextFormField(
+      errorText: experienceLevelError,
       onTap: () async {
         final selectedValue = await showModalBottomSheet<String>(
           context: context,
           builder: (context) {
             return ListView(
               shrinkWrap: true,
-              children: _experienceLevels
+              children: experienceLevels
                   .map(
                     (level) => ListTile(
                       title: Text(level),

@@ -5,6 +5,7 @@ import 'package:tasky_app/shared/utils/data/tab_bar_data.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/typography/app_text_styles.dart';
 import '../../viewmodel/bloc/home_bloc.dart';
+
 class CustomHomeTabBar extends StatelessWidget {
   const CustomHomeTabBar({
     super.key,
@@ -14,11 +15,12 @@ class CustomHomeTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(
-            data.length,
-                (index) {
+        return SizedBox(
+          height: 42,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: data.length,
+            itemBuilder: (context, index) {
               final isSelected = state.selectedIndex == index;
               return GestureDetector(
                 onTap: () {
@@ -42,8 +44,8 @@ class CustomHomeTabBar extends StatelessWidget {
                     style: isSelected
                         ? AppTextStyles.font16WeightBold
                         : AppTextStyles.font16WeightRegular.copyWith(
-                      color: AppColors.textGreyColor3,
-                    ),
+                            color: AppColors.textGreyColor3,
+                          ),
                   ),
                 ),
               );

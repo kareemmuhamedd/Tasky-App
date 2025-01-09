@@ -23,7 +23,6 @@ class _NameFormFieldState extends State<NameFormField> {
         context.read<SignupCubit>().onNameChanged(_nameController.text);
       }
     });
-
   }
 
   @override
@@ -32,10 +31,13 @@ class _NameFormFieldState extends State<NameFormField> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
+    final nameError = context.select(
+      (SignupCubit cubit) => cubit.state.name.errorMessage,
+    );
     return CustomTextFormField(
+      errorText: nameError,
       controller: _nameController,
       contentPadding: const EdgeInsets.only(left: 15),
       hintText: 'Name...',

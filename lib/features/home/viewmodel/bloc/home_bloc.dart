@@ -1,51 +1,85 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:tasky_app/features/create_task/model/task_model.dart';
+import 'package:tasky_app/features/home/repositories/home_repository.dart';
 
 part 'home_event.dart';
 
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc() : super(const HomeState.initial()) {
+  HomeBloc({required HomeRepository homeRepository})
+      : _homeRepository = homeRepository,
+        super(const HomeState.initial()) {
     on<HomeFilterChanged>(_onFilterChanged);
     on<AllTasksRequested>(_onAllTasksRequested);
+    on<GetTaskById>(_getTaskById);
+    on<ResetTaskRequested>(_resetTaskRequested);
   }
+
+  final HomeRepository _homeRepository;
 
   void _onFilterChanged(HomeFilterChanged event, Emitter<HomeState> emit) {
     emit(state.copyWith(selectedIndex: event.selectedIndex));
 
-    // Dynamically filter tasks based on the selected index
+    /// Dynamically filter tasks based on the selected index
     switch (event.selectedIndex) {
-      case 0: // All tasks
+      case 0:
+
+        /// here we are get all task types
         emit(state.copyWith(tasks: state.allTasks));
         break;
-      case 1: // In-progress tasks
+      case 1:
+
+        /// here we are get in progress task types
         emit(state.copyWith(tasks: state.inProgressTasks));
         break;
-      case 2: // Waiting tasks
+      case 2:
+
+        /// here we are get waiting task types
         emit(state.copyWith(tasks: state.waitingTasks));
         break;
-      case 3: // Finished tasks
+      case 3:
+
+        /// here we are get finished task types
         emit(state.copyWith(tasks: state.finishedTasks));
         break;
       default:
-        emit(state.copyWith(tasks: [])); // Fallback for unknown index
+        emit(state.copyWith(tasks: []));
     }
   }
 
+  /// this is event for get all tasks from the server
+  /// and filter them based on their status
   Future<void> _onAllTasksRequested(
-      AllTasksRequested event, Emitter<HomeState> emit) async {
+    AllTasksRequested event,
+    Emitter<HomeState> emit,
+  ) async {
     emit(state.copyWith(status: HomeStatus.loading));
     try {
-      await Future.delayed(const Duration(seconds: 1)); // Simulate loading
+      List<TaskModel>? allTasks;
+      final todos = await _homeRepository.getTasks(1);
+      todos.fold(
+        (failure) => emit(state.copyWith(
+          status: HomeStatus.failure,
+          message: failure.message,
+        )),
+        (tasks) {
+          allTasks = tasks;
+          emit(state.copyWith(
+            status: HomeStatus.success,
+            allTasks: tasks,
+          ));
+        },
+      );
 
-      // Example data (replace this with real data)
-      List<TaskModel> allTasks = _getAllTasks();
-
-      // Filter tasks by status and update the state
-      final inProgressTasks = allTasks.where((task) => task.status == "in-progress").toList();
-      final waitingTasks = allTasks.where((task) => task.status == "waiting").toList();
-      final finishedTasks = allTasks.where((task) => task.status == "finished").toList();
+      /// here we are filtering the tasks based on their status
+      final inProgressTasks =
+          allTasks?.where((task) => task.status == "inprogress").toList();
+      final waitingTasks =
+          allTasks?.where((task) => task.status == "waiting").toList();
+      final finishedTasks =
+          allTasks?.where((task) => task.status == "finished").toList();
 
       emit(state.copyWith(
         status: HomeStatus.success,
@@ -53,7 +87,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         inProgressTasks: inProgressTasks,
         waitingTasks: waitingTasks,
         finishedTasks: finishedTasks,
-        tasks: allTasks, // Initially display all tasks
+        tasks: allTasks,
       ));
     } catch (error) {
       emit(state.copyWith(
@@ -61,9 +95,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  // Helper method to fetch all tasks
-  List<TaskModel> _getAllTasks() {
-    // Example data - replace with real data fetching logic
-    return fakeTasks;
+  /// this event for get specific task by id
+  /// after scanning the qr code
+  void _getTaskById(GetTaskById event, Emitter<HomeState> emit) async {
+    emit(state.copyWith(status: HomeStatus.loading));
+    final task = await _homeRepository.getSpecificTask(event.id);
+    task.fold(
+      (failure) => emit(state.copyWith(
+        status: HomeStatus.failure,
+        message: failure.message,
+      )),
+      (task) {
+        emit(state.copyWith(
+          status: HomeStatus.success,
+          task: task,
+        ));
+      },
+    );
+  }
+
+  void _resetTaskRequested(ResetTaskRequested event, Emitter<HomeState> emit) {
+    emit(state.copyWith(task: null));
   }
 }

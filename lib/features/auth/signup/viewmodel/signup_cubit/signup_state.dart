@@ -51,21 +51,21 @@ class SignupState {
           status: SignupSubmissionStatus.idle,
           message: '',
           showPassword: false,
-          phoneNumber: '',
-          password: '',
-          name: '',
-          yearsOfExperience: '',
-          experienceLevel: '',
-          address: '',
+          phoneNumber: const Phone.pure(),
+          password: const Password.pure(),
+          name: const Name.pure(),
+          yearsOfExperience: const Years.pure(),
+          experienceLevel: const Level.pure(),
+          address: const Address.pure(),
         );
 
   final SignupSubmissionStatus status;
-  final String name;
-  final String phoneNumber;
-  final String yearsOfExperience;
-  final String experienceLevel;
-  final String address;
-  final String password;
+  final Name name;
+  final Phone phoneNumber;
+  final Years yearsOfExperience;
+  final Level experienceLevel;
+  final Address address;
+  final Password password;
   final bool showPassword;
   final String message;
 
@@ -73,12 +73,12 @@ class SignupState {
     SignupSubmissionStatus? status,
     String? message,
     bool? showPassword,
-    String? phoneNumber,
-    String? password,
-    String? name,
-    String? yearsOfExperience,
-    String? experienceLevel,
-    String? address,
+    Phone? phoneNumber,
+    Password? password,
+    Name? name,
+    Years? yearsOfExperience,
+    Level? experienceLevel,
+    Address? address,
   }) {
     return SignupState._(
       status: status ?? this.status,
