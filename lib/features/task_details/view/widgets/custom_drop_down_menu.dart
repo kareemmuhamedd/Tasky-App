@@ -9,9 +9,12 @@ import '../../../../shared/typography/app_text_styles.dart';
 import '../../../create_task/model/task_model.dart';
 
 class CustomDropdownMenu extends StatefulWidget {
+  final VoidCallback deleteTaskCallBack;
+
   const CustomDropdownMenu({
     super.key,
     required this.task,
+    required this.deleteTaskCallBack,
   });
 
   final TaskModel task;
@@ -24,7 +27,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
   final GlobalKey _iconKey = GlobalKey();
   OverlayEntry? _overlayEntry;
 
-  void _showDropdown(BuildContext context) {
+  void _showDropdown(BuildContext context, VoidCallback onTap) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;
 
@@ -90,6 +93,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
                         GestureDetector(
                           onTap: () {
                             _removeDropdown();
+                            onTap();
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -143,7 +147,12 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
   Widget build(BuildContext context) {
     return GestureDetector(
       key: _iconKey,
-      onTap: () => _showDropdown(context),
+      onTap: () => _showDropdown(
+        context,
+        () {
+          widget.deleteTaskCallBack();
+        },
+      ),
       child: SvgPicture.asset(
         AppIcons.verticalDotIcon,
       ),

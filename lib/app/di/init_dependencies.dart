@@ -13,6 +13,7 @@ import '../../features/create_task/repositories/create_task_repository.dart';
 import '../../features/delete_task/repositories/delete_task_repository.dart';
 import '../../features/profile/repositories/profile_remote_repository.dart';
 import '../../features/profile/viewmodel/bloc/profile_bloc.dart';
+import '../../features/task_details/viewmodel/bloc/task_details_bloc.dart';
 import '../../features/update_task/repositories/update_task_remote_repository.dart';
 import '../../features/update_task/viewmodel/bloc/update_task_bloc.dart';
 
@@ -30,6 +31,7 @@ Future<void> initDependencies() async {
   _initCreateTaskRegistration();
   _initProfileRegistration();
   _initUpdateTaskRegistration();
+  _initTaskDetailsRegistration();
 }
 
 void _initAuthRegistration() {
@@ -129,6 +131,15 @@ void _initUpdateTaskRegistration() {
     () => UpdateTaskBloc(
       updateTaskRemoteRepository: serviceLocator<UpdateTaskRemoteRepository>(),
       createTaskRepository: serviceLocator<CreateTaskRepository>(),
+    ),
+  );
+}
+
+void _initTaskDetailsRegistration() {
+  /// Register Blocs of TaskDetails
+  serviceLocator.registerFactory<TaskDetailsBloc>(
+    () => TaskDetailsBloc(
+      deleteTaskRemoteRepository: serviceLocator<DeleteTaskRemoteRepository>(),
     ),
   );
 }
