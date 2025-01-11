@@ -38,36 +38,38 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     HomeFilterChanged event,
     Emitter<HomeState> emit,
   ) {
+    /// if you want to know more about the following logic and why we return if isDeletionTaskInProgress is true
+    /// see the following details documentation for clear explanation.
+    final isDeletionTaskInProgress = state.removeTaskFromUiIsInProgress;
+    if (isDeletionTaskInProgress) {
+      return;
+    }
+
+    /// The `removeTaskFromUiIsInProgress` boolean variable is used to check if the user is attempting to delete a task.
+    /// This ensures that we do not emit the tasks to fetch all tasks from the state during this process.
+    ///
+    /// The reason for this logic is that when the user presses the delete button on a task in the home screen's list view,
+    /// a snack bar with an undo action is displayed for 6 seconds, allowing the user to cancel the deletion.
+    /// If the user refreshes the screen while the task deletion is in progress (i.e., while the snack bar is still visible),
+    /// triggering the `_onFilterChanged` event can cause an unusual behavior.
+    ///
+    /// Specifically, if the user attempts to delete a task and quickly refreshes the screen, then cancels the deletion,
+    /// the task they tried to delete may appear twice in the home screen list view.
+    /// To restore normal behavior, the user would need to refresh the screen again.
+    ///
+    /// To avoid this issue, the `removeTaskFromUiIsInProgress` variable is used to determine if a task deletion is ongoing.
+    /// If a deletion is in progress, we do not emit the tasks to fetch all tasks from the state until the deletion process is complete
+    /// or the user cancels the deletion.
+    ///
+    /// If the user cancels the deletion, the `removeTaskFromUiIsInProgress` variable is set to `false`,
+    /// allowing the normal refresh logic to resume if the user wants to refresh the screen.
+    /// Similarly, if the task is successfully deleted, the `removeTaskFromUiIsInProgress` variable is also set to `false`.
+
     emit(state.copyWith(selectedIndex: event.selectedIndex));
 
     /// Dynamically filter tasks based on the selected index
     switch (event.selectedIndex) {
       case 0:
-
-        /// The `removeTaskFromUiIsInProgress` boolean variable is used to check if the user is attempting to delete a task.
-        /// This ensures that we do not emit the tasks to fetch all tasks from the state during this process.
-        ///
-        /// The reason for this logic is that when the user presses the delete button on a task in the home screen's list view,
-        /// a snack bar with an undo action is displayed for 6 seconds, allowing the user to cancel the deletion.
-        /// If the user refreshes the screen while the task deletion is in progress (i.e., while the snack bar is still visible),
-        /// triggering the `_onFilterChanged` event can cause an unusual behavior.
-        ///
-        /// Specifically, if the user attempts to delete a task and quickly refreshes the screen, then cancels the deletion,
-        /// the task they tried to delete may appear twice in the home screen list view.
-        /// To restore normal behavior, the user would need to refresh the screen again.
-        ///
-        /// To avoid this issue, the `removeTaskFromUiIsInProgress` variable is used to determine if a task deletion is ongoing.
-        /// If a deletion is in progress, we do not emit the tasks to fetch all tasks from the state until the deletion process is complete
-        /// or the user cancels the deletion.
-        ///
-        /// If the user cancels the deletion, the `removeTaskFromUiIsInProgress` variable is set to `false`,
-        /// allowing the normal refresh logic to resume if the user wants to refresh the screen.
-        /// Similarly, if the task is successfully deleted, the `removeTaskFromUiIsInProgress` variable is also set to `false`.
-
-        final isDeletionTaskInProgress = state.removeTaskFromUiIsInProgress;
-        if (isDeletionTaskInProgress) {
-          return;
-        }
 
         /// here we are get all task types
         emit(state.copyWith(tasks: state.allTasks));
