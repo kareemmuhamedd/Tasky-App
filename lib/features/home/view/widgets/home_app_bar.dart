@@ -5,7 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasky_app/app/bloc/app_bloc.dart';
 import 'package:tasky_app/app/routes/app_routes.dart';
-import 'package:tasky_app/features/task_details/viewmodel/utils/task_details_utils.dart';
 import 'package:tasky_app/shared/assets/icons.dart';
 import 'package:tasky_app/shared/theme/app_colors.dart';
 import 'package:tasky_app/shared/typography/app_text_styles.dart';
