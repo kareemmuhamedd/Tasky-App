@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:tasky_app/features/auth/login/repositories/login_remote_repository.dart';
 import 'package:tasky_app/features/auth/login/viewmodel/login_cubit/login_cubit.dart';
 import 'package:tasky_app/features/auth/signup/repositories/signup_remote_repository.dart';
@@ -16,6 +17,7 @@ import '../../features/profile/viewmodel/bloc/profile_bloc.dart';
 import '../../features/task_details/viewmodel/bloc/task_details_bloc.dart';
 import '../../features/update_task/repositories/update_task_remote_repository.dart';
 import '../../features/update_task/viewmodel/bloc/update_task_bloc.dart';
+import '../../shared/networking/connection_checker.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -23,6 +25,12 @@ Future<void> initDependencies() async {
   /// Dio & ApiService
   Dio dio = DioFactory.getDio();
   serviceLocator.registerLazySingleton<Dio>(() => dio);
+  serviceLocator.registerFactory<InternetConnection>(() => InternetConnection());
+  serviceLocator.registerFactory<ConnectionChecker>(
+    () => ConnectionCheckerImpl(
+      serviceLocator<InternetConnection>(),
+    ),
+  );
 
   /// CORE DEPENDENCIES REGISTRATION STARTS HERE
   _initAuthRegistration();
@@ -91,6 +99,7 @@ void _initCreateTaskRegistration() {
   serviceLocator.registerFactory<CreateTaskRepository>(
     () => CreateTaskRepository(
       dio: serviceLocator<Dio>(),
+      connectionChecker: serviceLocator<ConnectionChecker>(),
     ),
   );
 

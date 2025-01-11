@@ -139,8 +139,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         tasks: allTasks,
       ));
     } catch (error) {
-      emit(state.copyWith(
-          status: HomeStatus.failure, message: error.toString()));
+      emit(
+        state.copyWith(
+          status: HomeStatus.failure,
+          message: error.toString(),
+        ),
+      );
     }
   }
 
@@ -183,8 +187,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       event.index,
       event.task,
     );
-    emit(state.copyWith(
-        tasks: updatedTasks, removeTaskFromUiIsInProgress: false));
+    emit(
+      state.copyWith(
+        tasks: updatedTasks,
+        removeTaskFromUiIsInProgress: false,
+      ),
+    );
   }
 
   /// this event for delete task by id permanently

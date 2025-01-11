@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../shared/assets/icons.dart';
 import '../../../../shared/theme/app_colors.dart';
@@ -67,38 +68,40 @@ class TaskDescriptionWithDetails extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 6),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  SvgPicture.asset(
-                    AppIcons.flagIcon,
-                    colorFilter: ColorFilter.mode(
-                      UiHelper.getTaskPriorityColor(
-                        task.priority,
-                      ),
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    task.priority,
-                    style: AppTextStyles.font12WeightMedium.copyWith(
-                      color: UiHelper.getTaskPriorityColor(
-                        task.priority,
+          Skeleton.ignore(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    SvgPicture.asset(
+                      AppIcons.flagIcon,
+                      colorFilter: ColorFilter.mode(
+                        UiHelper.getTaskPriorityColor(
+                          task.priority,
+                        ),
+                        BlendMode.srcIn,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Text(
-                task.getFormattedCreatedAt(),
-                style: AppTextStyles.font12WeightRegular.copyWith(
-                  color: AppColors.blackColor.withOpacity(0.6),
+                    const SizedBox(width: 4),
+                    Text(
+                      task.priority,
+                      style: AppTextStyles.font12WeightMedium.copyWith(
+                        color: UiHelper.getTaskPriorityColor(
+                          task.priority,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                Text(
+                  task.getFormattedCreatedAt(),
+                  style: AppTextStyles.font12WeightRegular.copyWith(
+                    color: AppColors.blackColor.withOpacity(0.6),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

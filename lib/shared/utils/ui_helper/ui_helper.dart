@@ -13,7 +13,7 @@ abstract class UiHelper {
       case 'finished':
         return AppColors.lightBlueColor;
       default:
-        return AppColors.textGreyColor3;
+        return AppColors.transparentColor;
     }
   }
 
@@ -26,7 +26,7 @@ abstract class UiHelper {
       case 'finished':
         return AppColors.blueColor;
       default:
-        return AppColors.textGreyColor;
+        return AppColors.transparentColor;
     }
   }
 

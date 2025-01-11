@@ -55,6 +55,12 @@ class CreateTaskBody extends StatelessWidget {
               if (state.status == CreateTaskStatus.success) {
                 context.read<HomeBloc>().add(const AllTasksRequested());
                 Navigator.of(context).pop();
+              } else if (state.status == CreateTaskStatus.error) {
+                showCustomSnackBar(
+                  context,
+                  state.message,
+                  isError: true,
+                );
               }
             },
             builder: (context, state) {

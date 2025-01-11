@@ -33,6 +33,17 @@ class CreateTaskBloc extends Bloc<CreateTaskEvent, CreateTaskState> {
   ) async {
     emit(state.copyWith(status: CreateTaskStatus.loading));
 
+    /// Check internet connection
+    final isConnected = await _createTaskRepository.isConnected();
+    if (!isConnected) {
+      print('no internet connection');
+      emit(state.copyWith(
+        status: CreateTaskStatus.error,
+        message: 'No internet connection. Please try again later.',
+      ));
+      return;
+    }
+
     /// upload image first before creating task
     /// because task creation requires image url to be passed in the request
     final imageResult =

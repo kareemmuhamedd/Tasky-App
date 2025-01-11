@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tasky_app/app/routes/app_routes.dart';
+import '../../../../shared/utils/data/dummy_data.dart';
 import '../../viewmodel/bloc/home_bloc.dart';
 import 'home_list_item_card.dart';
 
@@ -14,11 +16,21 @@ class HomeTasksListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        // if (state.status == HomeStatus.loading) {
-        //   return const SliverFillRemaining(
-        //     child: Center(child: CircularProgressIndicator()),
-        //   );
-        // }
+        if (state.status == HomeStatus.loading) {
+          return SliverFillRemaining(
+            child: Skeletonizer(
+              child: ListView.builder(
+                itemCount: 9,
+                itemBuilder: (context, index) {
+                  return HomeListItemCard(
+                    task: dummyObject,
+                    cardIndex: index,
+                  );
+                },
+              ),
+            ),
+          );
+        }
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             childCount: state.tasks.length,
@@ -46,4 +58,3 @@ class HomeTasksListView extends StatelessWidget {
     );
   }
 }
-
