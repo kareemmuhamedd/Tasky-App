@@ -5,6 +5,7 @@ enum HomeStatus {
   loading,
   success,
   failure,
+  deleteSuccess,
 }
 
 class HomeState {
@@ -17,6 +18,7 @@ class HomeState {
     required this.inProgressTasks,
     required this.waitingTasks,
     required this.finishedTasks,
+    required this.removeTaskFromUiIsInProgress,
     this.task,
   });
 
@@ -30,6 +32,7 @@ class HomeState {
           inProgressTasks: const [],
           waitingTasks: const [],
           finishedTasks: const [],
+          removeTaskFromUiIsInProgress: false,
         );
 
   final HomeStatus status;
@@ -41,6 +44,7 @@ class HomeState {
   final List<TaskModel> waitingTasks;
   final List<TaskModel> finishedTasks;
   final TaskModel? task;
+  final bool removeTaskFromUiIsInProgress;
 
   HomeState copyWith({
     HomeStatus? status,
@@ -52,6 +56,7 @@ class HomeState {
     List<TaskModel>? waitingTasks,
     List<TaskModel>? finishedTasks,
     TaskModel? task,
+    bool? removeTaskFromUiIsInProgress,
   }) {
     return HomeState._(
       status: status ?? this.status,
@@ -63,6 +68,7 @@ class HomeState {
       waitingTasks: waitingTasks ?? this.waitingTasks,
       finishedTasks: finishedTasks ?? this.finishedTasks,
       task: task ?? this.task,
+      removeTaskFromUiIsInProgress: removeTaskFromUiIsInProgress ?? this.removeTaskFromUiIsInProgress,
     );
   }
 }

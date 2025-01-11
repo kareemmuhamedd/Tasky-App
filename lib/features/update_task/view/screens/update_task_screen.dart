@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tasky_app/app/di/init_dependencies.dart';
 import 'package:tasky_app/features/create_task/model/task_model.dart';
 import 'package:tasky_app/features/update_task/models/update_task_request.dart';
 import 'package:tasky_app/features/update_task/view/widgets/custom_update_task_field_with_header.dart';
 import 'package:tasky_app/features/update_task/view/widgets/custom_update_task_image.dart';
 import 'package:tasky_app/features/update_task/view/widgets/update_task_description_form_field.dart';
 import 'package:tasky_app/features/update_task/view/widgets/update_task_title_form_field.dart';
-import '../../../../shared/networking/dio_factory.dart';
 import '../../../../shared/typography/app_text_styles.dart';
 import '../../../../shared/utils/snack_bars/custom_snack_bar.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/custom_app_bar.dart';
-import '../../../create_task/repositories/create_task_repository.dart';
 import '../../../task_details/view/widgets/task_priority.dart';
 import '../../../task_details/view/widgets/task_progress_status.dart';
-import '../../repositories/update_task_remote_repository.dart';
 import '../../viewmodel/bloc/update_task_bloc.dart';
 
 class UpdateTaskScreen extends StatelessWidget {
@@ -27,15 +25,8 @@ class UpdateTaskScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => UpdateTaskBloc(
-        updateTaskRemoteRepository: UpdateTaskRemoteRepository(
-          dio: DioFactory.getDio(),
-        ),
-        createTaskRepository: CreateTaskRepository(
-          dio: DioFactory.getDio(),
-        ),
-      ),
+    return BlocProvider.value(
+      value: serviceLocator<UpdateTaskBloc>(),
       child: UpdateTaskBody(
         task: task,
       ),

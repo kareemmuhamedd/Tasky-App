@@ -1,4 +1,4 @@
-final data = [
+final tabBarItems = [
   'All',
   'InProgress',
   'Waiting',

@@ -3,19 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:tasky_app/features/create_task/model/task_model.dart';
-import 'package:tasky_app/features/create_task/repositories/create_task_repository.dart';
-import 'package:tasky_app/features/update_task/repositories/update_task_remote_repository.dart';
+import 'package:tasky_app/features/task_details/viewmodel/utils/task_details_utils.dart';
 import 'package:tasky_app/features/update_task/viewmodel/bloc/update_task_bloc.dart';
 import 'package:tasky_app/shared/assets/icons.dart';
-import 'package:tasky_app/shared/networking/dio_factory.dart';
 import 'package:tasky_app/shared/typography/app_text_styles.dart';
-import 'package:tasky_app/shared/utils/extensions/show_dialog_extension.dart';
 import 'package:tasky_app/shared/widgets/custom_app_bar.dart';
 import 'package:tasky_app/shared/widgets/custom_tile_widget.dart';
+import '../../../../app/di/init_dependencies.dart';
 import '../../../../shared/theme/app_colors.dart';
-import '../../../update_task/models/update_task_request.dart';
+import '../../viewmodel/bloc/task_details_bloc.dart';
 import '../widgets/task_priority.dart';
 import '../widgets/task_progress_status.dart';
 import '../widgets/task_qr_code.dart';
@@ -30,18 +27,16 @@ class TaskDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => UpdateTaskBloc(
-        updateTaskRemoteRepository: UpdateTaskRemoteRepository(
-          dio: DioFactory.getDio(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(
+          value: serviceLocator<UpdateTaskBloc>(),
         ),
-        createTaskRepository: CreateTaskRepository(
-          dio: DioFactory.getDio(),
+        BlocProvider.value(
+          value: serviceLocator<TaskDetailsBloc>(),
         ),
-      ),
-      child: TaskDetailsBody(
-        task: task,
-      ),
+      ],
+      child: TaskDetailsBody(task: task),
     );
   }
 }
@@ -54,68 +49,24 @@ class TaskDetailsBody extends StatelessWidget {
 
   final TaskModel task;
 
-  bool canPop(BuildContext context) {
-    final bloc = context.read<UpdateTaskBloc>();
-
-    final hasPriorityChanged = bloc.state.selectedPriority != null &&
-        bloc.state.selectedPriority != task.priority;
-    final hasStatusChanged = bloc.state.selectedProgressStatus != null &&
-        bloc.state.selectedProgressStatus != task.status;
-
-    return hasPriorityChanged || hasStatusChanged;
-  }
-
-  void _confirmGoBack(BuildContext context) {
-    final bloc = context.read<UpdateTaskBloc>();
-    if (canPop(context)) {
-      context.confirmAction(
-        cancel: () {
-          /// here if user clicks on cancel, we will pop the dialog without updating the task
-          context.pop();
-        },
-        fn: () {
-          /// here if the user clicks on yes, we will update the task and navigate back
-          bloc.add(
-            UpdateTaskRequestedWithImage(
-              taskId: task.id,
-              data: UpdateTaskRequest(
-                priority: bloc.state.selectedPriority ?? task.priority,
-                status: bloc.state.selectedProgressStatus ?? task.status,
-              ),
-            ),
-          );
-          context.pop();
-        },
-        title: 'You have unsaved changes. Do you want to save them?',
-        content: 'Save changes and go back?',
-        noText: 'No',
-        yesText: 'Yes',
-        yesTextStyle: AppTextStyles.font14WeightRegular.copyWith(
-          color: AppColors.primaryColor,
-        ),
-        noTextStyle: AppTextStyles.font14WeightRegular.copyWith(
-          color: AppColors.errorRedColor,
-        ),
-      );
-    } else {
-      /// if the user has not made any changes, we will just pop the context
-      context.pop();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: canPop(context),
+      canPop: TaskDetailsUtils(task: task, context: context).canPop(context),
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) return;
-        _confirmGoBack(context);
+        TaskDetailsUtils(task: task, context: context).confirmGoBack(context);
       },
       child: Scaffold(
         appBar: CustomAppBar(
           appBarTitle: 'Task Details',
-          onBack: () => _confirmGoBack(context),
+          onBack: () => TaskDetailsUtils(task: task, context: context)
+              .confirmGoBack(context),
           task: task,
+          deleteTaskCallBack: () {
+            TaskDetailsUtils(task: task, context: context)
+                .confirmDeleteTask(context);
+          },
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -126,6 +77,34 @@ class TaskDetailsBody extends StatelessWidget {
                 color: AppColors.lightOrangeColor,
                 child: CachedNetworkImage(
                   imageUrl: task.image,
+                  errorWidget: (context, url, error) => Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.warning_rounded,
+                        color: AppColors.borderGreyColor,
+                        size: 40,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Unable to load image.',
+                        style: TextStyle(
+                          color: AppColors.blackColor,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Please try uploading a new one.',
+                        style: TextStyle(
+                          color: AppColors.blackColor,
+                          fontSize: 14.sp,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -189,7 +168,7 @@ class TaskDetailsBody extends StatelessWidget {
                     TaskQRCode(taskId: task.id),
                     const SizedBox(
                       height: 20,
-                    )
+                    ),
                   ],
                 ),
               )

@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasky_app/app/routes/app_routes.dart';
-import 'package:tasky_app/features/update_task/viewmodel/bloc/update_task_bloc.dart';
-
 import '../../../../shared/assets/icons.dart';
-import '../../../../shared/networking/dio_factory.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/typography/app_text_styles.dart';
 import '../../../create_task/model/task_model.dart';
-import '../../../create_task/repositories/create_task_repository.dart';
-import '../../../update_task/repositories/update_task_remote_repository.dart';
 
 class CustomDropdownMenu extends StatefulWidget {
+  final VoidCallback deleteTaskCallBack;
+
   const CustomDropdownMenu({
     super.key,
     required this.task,
+    required this.deleteTaskCallBack,
   });
 
   final TaskModel task;
@@ -30,7 +27,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
   final GlobalKey _iconKey = GlobalKey();
   OverlayEntry? _overlayEntry;
 
-  void _showDropdown(BuildContext context) {
+  void _showDropdown(BuildContext context, VoidCallback onTap) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;
 
@@ -71,7 +68,6 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            print('Edit pressed');
                             _removeDropdown();
                             context.pushNamed(
                               AppRoutesPaths.kUpdateTaskScreen,
@@ -96,8 +92,8 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            print('Delete pressed');
                             _removeDropdown();
+                            onTap();
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -151,7 +147,12 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
   Widget build(BuildContext context) {
     return GestureDetector(
       key: _iconKey,
-      onTap: () => _showDropdown(context),
+      onTap: () => _showDropdown(
+        context,
+        () {
+          widget.deleteTaskCallBack();
+        },
+      ),
       child: SvgPicture.asset(
         AppIcons.verticalDotIcon,
       ),

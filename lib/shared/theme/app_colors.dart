@@ -17,4 +17,5 @@ abstract class AppColors {
   static const lightBlueColor = Color(0xFFE3F2FF);
   static const blueColor = Color(0xFF0087FF);
   static const errorRedColor = Color(0xFFE74C3C);
+  static const transparentColor = Color(0x00000000);
 }

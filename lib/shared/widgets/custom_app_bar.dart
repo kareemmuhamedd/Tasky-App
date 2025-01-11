@@ -14,12 +14,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.isHaveActions = true,
     this.onBack,
     this.task,
+    this.deleteTaskCallBack,
   });
 
   final bool isHaveActions;
   final String appBarTitle;
   final void Function()? onBack;
   final TaskModel? task;
+  final VoidCallback? deleteTaskCallBack;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -62,6 +64,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 padding: const EdgeInsets.only(right: 16.0),
                 child: CustomDropdownMenu(
                   task: task!,
+                  deleteTaskCallBack: deleteTaskCallBack!,
                 ),
               )
             ]

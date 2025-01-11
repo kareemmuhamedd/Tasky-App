@@ -3,10 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:tasky_app/app/routes/app_routes.dart';
-import 'package:tasky_app/features/home/repositories/home_repository.dart';
-import 'package:tasky_app/shared/networking/dio_factory.dart';
 import 'package:tasky_app/shared/theme/app_colors.dart';
 import 'package:tasky_app/shared/utils/snack_bars/custom_snack_bar.dart';
+import '../../../../app/di/init_dependencies.dart';
 import '../../viewmodel/bloc/home_bloc.dart';
 
 class ScanTaskQrCodeScreen extends StatelessWidget {
@@ -14,12 +13,8 @@ class ScanTaskQrCodeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HomeBloc(
-        homeRepository: HomeRepository(
-          dio: DioFactory.getDio(),
-        ),
-      ),
+    return BlocProvider.value(
+      value: serviceLocator<HomeBloc>(),
       child: const ScanTaskQrCodeBody(),
     );
   }

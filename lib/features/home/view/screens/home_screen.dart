@@ -3,10 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasky_app/app/routes/app_routes.dart';
-import 'package:tasky_app/features/home/repositories/home_repository.dart';
-import 'package:tasky_app/shared/networking/dio_factory.dart';
 import 'package:tasky_app/shared/theme/app_colors.dart';
 import 'package:tasky_app/shared/typography/app_text_styles.dart';
+import '../../../../app/di/init_dependencies.dart';
 import '../../viewmodel/bloc/home_bloc.dart';
 import '../widgets/custom_home_tab_bar.dart';
 import '../widgets/home_app_bar.dart';
@@ -17,12 +16,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HomeBloc(
-        homeRepository: HomeRepository(
-          dio: DioFactory.getDio(),
+    return BlocProvider.value(
+      value: serviceLocator<HomeBloc>()
+        ..add(
+          const AllTasksRequested(),
         ),
-      )..add(const AllTasksRequested()),
       child: const HomeBody(),
     );
   }
@@ -40,27 +38,33 @@ class HomeBody extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 22.w),
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'My Tasks',
-                    style: AppTextStyles.font16WeightBold
-                        .copyWith(color: AppColors.blackColor.withOpacity(0.6)),
-                  ),
-                  const SizedBox(height: 16),
-                  const CustomHomeTabBar(),
-                ],
+        child: RefreshIndicator(
+          onRefresh: () async {
+            context.read<HomeBloc>().add(const AllTasksRequested());
+            context.read<HomeBloc>().add(const HomeFilterChanged(0));
+          },
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'My Tasks',
+                      style: AppTextStyles.font16WeightBold.copyWith(
+                          color: AppColors.blackColor.withOpacity(0.6)),
+                    ),
+                    const SizedBox(height: 16),
+                    const CustomHomeTabBar(),
+                  ],
+                ),
               ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 16),
-            ),
-            const HomeTasksListView(),
-          ],
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 16),
+              ),
+              const HomeTasksListView(),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Column(

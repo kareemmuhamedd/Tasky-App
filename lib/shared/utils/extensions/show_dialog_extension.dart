@@ -15,7 +15,7 @@ extension DialogExtension on BuildContext {
     required String title,
     required String noText,
     required String yesText,
-    required void Function() cancel,
+    void Function()? cancel,
     String? content,
     TextStyle? yesTextStyle,
     TextStyle? noTextStyle,
@@ -31,7 +31,7 @@ extension DialogExtension on BuildContext {
       noAction: noAction,
     );
     if (isConfirmed == null || !isConfirmed) {
-      cancel.call();
+      cancel?.call();
       return;
     }
     fn.call();
@@ -92,7 +92,7 @@ extension DialogExtension on BuildContext {
         context: this,
         barrierDismissible: barrierDismissible,
         builder: builder ??
-                (context) {
+            (context) {
               return AlertDialog.adaptive(
                 actionsAlignment: MainAxisAlignment.end,
                 title: Text(title ?? '', style: titleTextStyle),

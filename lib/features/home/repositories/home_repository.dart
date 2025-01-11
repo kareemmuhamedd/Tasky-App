@@ -6,8 +6,8 @@ import 'package:tasky_app/shared/networking/api_constants.dart';
 
 import '../../../shared/error/custom_error_handler.dart';
 
-class HomeRepository {
-  const HomeRepository({
+class HomeRemoteRepository {
+  const HomeRemoteRepository({
     required Dio dio,
   }) : _dio = dio;
   final Dio _dio;

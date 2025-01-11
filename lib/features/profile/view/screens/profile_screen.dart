@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tasky_app/features/profile/repositories/profile_remote_repository.dart';
+import 'package:tasky_app/app/di/init_dependencies.dart';
 import 'package:tasky_app/features/profile/view/widgets/custom_profile_information_card.dart';
 import 'package:tasky_app/features/profile/viewmodel/bloc/profile_bloc.dart';
-import 'package:tasky_app/shared/networking/dio_factory.dart';
 import 'package:tasky_app/shared/theme/app_colors.dart';
 
 import '../../../../shared/widgets/custom_app_bar.dart';
@@ -14,12 +13,11 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProfileBloc(
-        profileRemoteRepository: ProfileRemoteRepository(
-          dio: DioFactory.getDio(),
+    return BlocProvider.value(
+      value: serviceLocator<ProfileBloc>()
+        ..add(
+          const ProfileDataRequested(),
         ),
-      )..add(const ProfileDataRequested()),
       child: const ProfileBody(),
     );
   }

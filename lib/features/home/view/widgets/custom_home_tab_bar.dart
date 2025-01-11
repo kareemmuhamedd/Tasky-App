@@ -19,7 +19,7 @@ class CustomHomeTabBar extends StatelessWidget {
           height: 42,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: data.length,
+            itemCount: tabBarItems.length,
             itemBuilder: (context, index) {
               final isSelected = state.selectedIndex == index;
               return GestureDetector(
@@ -40,7 +40,7 @@ class CustomHomeTabBar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(42),
                   ),
                   child: Text(
-                    data[index],
+                    tabBarItems[index],
                     style: isSelected
                         ? AppTextStyles.font16WeightBold
                         : AppTextStyles.font16WeightRegular.copyWith(

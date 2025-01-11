@@ -4,6 +4,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:tasky_app/features/create_task/model/create_task_request.dart';
 import 'package:tasky_app/features/create_task/model/task_model.dart';
 import 'package:tasky_app/shared/error/failures.dart';
+import 'package:tasky_app/shared/networking/connection_checker.dart';
 import 'package:tasky_app/shared/utils/local_storage/shared_pref_service.dart';
 
 import '../../../shared/error/custom_error_handler.dart';
@@ -14,8 +15,15 @@ import '../../../shared/utils/isolate/compress_image_with_isolate.dart';
 class CreateTaskRepository {
   CreateTaskRepository({
     required Dio dio,
-  }) : _dio = dio;
+    required ConnectionChecker connectionChecker,
+  })  : _dio = dio,
+        _connectionChecker = connectionChecker;
   final Dio _dio;
+  final ConnectionChecker _connectionChecker;
+
+  Future<bool> isConnected() async {
+    return await _connectionChecker.isConnected;
+  }
 
   Future<Either<Failure, String>> uploadImage({
     required String imagePath,

@@ -39,7 +39,9 @@ dependencies:
   pretty_qr_code: ^3.3.0
   flutter_image_compress: ^2.4.0
   formz: ^0.4.1
-  flutter_libphonenumber: ^2.5.0
+  get_it: ^8.0.3
+  skeletonizer: ^1.4.3
+  internet_connection_checker_plus: ^2.7.0
 
 dev_dependencies:
   flutter_test:
