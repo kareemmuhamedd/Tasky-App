@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-
 import '../../../../shared/assets/icons.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/typography/app_text_styles.dart';
@@ -19,8 +17,9 @@ class TaskDescriptionWithDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return SizedBox(
-      width: 200.w,
+      width: size.width - 167,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,

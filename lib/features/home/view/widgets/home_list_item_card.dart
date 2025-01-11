@@ -18,6 +18,7 @@ class HomeListItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      width: double.infinity,
       height: 96,
       child: Row(
         mainAxisSize: MainAxisSize.min,
