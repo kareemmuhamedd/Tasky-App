@@ -9,20 +9,20 @@ part 'app_state.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
   AppBloc({required AppState initialState}) : super(initialState) {
-    on<CheckOnboardingStatus>(_onCheckOnboardingStatus);
+    on<DetermineAppStateRequested>(_onDetermineAppStateRequested);
     on<CompleteOnboarding>(_onCompleteOnboarding);
-    on<AppLogoutRequested>(_onLogoutRequested);
+    on<AppRedirectAfterLoggedOut>(_onAppRedirectAfterLoggedOut);
 
-    add(const CheckOnboardingStatus());
+    add(const DetermineAppStateRequested());
   }
 
   Future<void> initialize() async {
-    add(const CheckOnboardingStatus());
+    add(const DetermineAppStateRequested());
   }
 
-  /// Handles the [CheckOnboardingStatus] event.
-  Future<void> _onCheckOnboardingStatus(
-    CheckOnboardingStatus event,
+  /// Handles the [DetermineAppStateRequested] event.
+  Future<void> _onDetermineAppStateRequested(
+    DetermineAppStateRequested event,
     Emitter<AppState> emit,
   ) async {
     final accessToken = SharedPrefHelper.instance.getString('access_token');
@@ -51,9 +51,9 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     emit(state.copyWith(status: AppStatus.unauthenticated));
   }
 
-  /// Handles the [AppLogoutRequested] event.
-  void _onLogoutRequested(
-    AppLogoutRequested event,
+  /// Handles the [AppRedirectAfterLoggedOut] event.
+  void _onAppRedirectAfterLoggedOut(
+    AppRedirectAfterLoggedOut event,
     Emitter<AppState> emit,
   ) {
     emit(state.copyWith(status: AppStatus.unauthenticated));

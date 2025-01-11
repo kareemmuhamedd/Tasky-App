@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasky_app/app/routes/app_routes.dart';
+import 'package:tasky_app/features/profile/viewmodel/bloc/profile_bloc.dart';
 import 'package:tasky_app/shared/theme/app_colors.dart';
 import 'package:tasky_app/shared/typography/app_text_styles.dart';
 import '../../../../app/di/init_dependencies.dart';
@@ -15,13 +16,17 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: serviceLocator<HomeBloc>()
-        ..add(
-          const AllTasksRequested(),
-        ),
-      child: const HomeBody(),
-    );
+    return MultiBlocProvider(providers: [
+      BlocProvider.value(
+        value: serviceLocator<HomeBloc>()
+          ..add(
+            const AllTasksRequested(),
+          ),
+      ),
+      BlocProvider.value(
+        value: serviceLocator<ProfileBloc>(),
+      )
+    ], child: const HomeBody());
   }
 }
 

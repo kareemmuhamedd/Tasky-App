@@ -7,12 +7,12 @@ sealed class AppEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class AppLogoutRequested extends AppEvent {
-  const AppLogoutRequested();
+final class AppRedirectAfterLoggedOut extends AppEvent {
+  const AppRedirectAfterLoggedOut();
 }
 
-final class CheckOnboardingStatus extends AppEvent {
-  const CheckOnboardingStatus();
+final class DetermineAppStateRequested extends AppEvent {
+  const DetermineAppStateRequested();
 }
 
 final class CompleteOnboarding extends AppEvent {

@@ -7,6 +7,7 @@ void showCustomModalBottomSheet({
   required BuildContext context,
   List<String>? options,
   ValueChanged<String>? onOptionSelected,
+  Color? textColor,
 }) {
   showModalBottomSheet(
     context: context,
@@ -27,7 +28,7 @@ void showCustomModalBottomSheet({
                 return ListTile(
                   title: Text(
                     option,
-                    style: TextStyle(fontSize: 16.sp),
+                    style: TextStyle(fontSize: 16.sp, color: textColor),
                   ),
                   onTap: () {
                     onOptionSelected != null ? onOptionSelected(option) : null;
