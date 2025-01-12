@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tasky_app/shared/theme/app_colors.dart';
 
 /// The signature for the callback that uses the [BuildContext].
 typedef BuildContextCallback = void Function(BuildContext context);
@@ -8,8 +10,43 @@ typedef BuildContextCallback = void Function(BuildContext context);
 /// {@template show_dialog_extension}
 /// Dialog extension that shows dialog with optional `title`,
 /// `content` and `actions`.
+/// you can also show a confirmation dialog with `confirmAction` method.
+/// loadingDialog method shows a dialog with a loading indicator.
 /// {@endtemplate}
 extension DialogExtension on BuildContext {
+  Future<void> loadingDialog() async {
+    showDialog(
+      context: this,
+      barrierDismissible: false,
+      builder: (context) {
+        return Center(
+          child: Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.r),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  AppColors.primaryColor,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> confirmAction({
     required void Function() fn,
     required String title,

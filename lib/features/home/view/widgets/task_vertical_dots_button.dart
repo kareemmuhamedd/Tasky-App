@@ -7,6 +7,7 @@ import '../../../../shared/assets/icons.dart';
 import '../../../../shared/widgets/custom_app_bottom_sheet.dart';
 import '../../../create_task/model/task_model.dart';
 import '../../viewmodel/utils/home_utils.dart';
+
 class TaskVerticalDotsButton extends StatelessWidget {
   const TaskVerticalDotsButton({
     super.key,
@@ -22,7 +23,7 @@ class TaskVerticalDotsButton extends StatelessWidget {
     return Align(
       alignment: Alignment.topRight,
       child: Padding(
-        padding: const EdgeInsets.only(top: 9),
+        padding: const EdgeInsets.only(top: 11),
         child: GestureDetector(
           onTap: () {
             showCustomModalBottomSheet(

@@ -27,4 +27,23 @@ class ProfileRemoteRepository {
       return Left(Failure(message: errorMessage));
     }
   }
+
+  Future<Either<Failure, bool>> logout(String refreshToken) async {
+    try {
+      final response = await _dio.post(
+        '${ApiConstants.baseUrl}/auth/logout',
+        data: {
+          'token': refreshToken,
+        },
+      );
+      print(response.data['success']);
+      return const Right(true);
+    } on DioException catch (dioError) {
+      final errorMessage = CustomErrorHandler.handleDioError(dioError);
+      return Left(Failure(message: errorMessage));
+    } catch (error) {
+      final errorMessage = CustomErrorHandler.handleError(error);
+      return Left(Failure(message: errorMessage));
+    }
+  }
 }

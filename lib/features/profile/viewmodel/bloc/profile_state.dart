@@ -5,6 +5,7 @@ enum ProfileStatus {
   loading,
   success,
   failure,
+  loggedOut
 }
 
 class ProfileState extends Equatable {

@@ -56,7 +56,7 @@ class _LoginViewState extends State<LoginView> {
                       if (state.status == LogInSubmissionStatus.success) {
                         context
                             .read<AppBloc>()
-                            .add(const CheckOnboardingStatus());
+                            .add(const DetermineAppStateRequested());
                       } else if (state.status == LogInSubmissionStatus.error) {
                         showCustomSnackBar(
                           context,

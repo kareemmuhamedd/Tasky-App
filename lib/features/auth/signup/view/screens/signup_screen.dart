@@ -58,7 +58,7 @@ class SignupView extends StatelessWidget {
                       if (state.status == SignupSubmissionStatus.success) {
                         context
                             .read<AppBloc>()
-                            .add(const CheckOnboardingStatus());
+                            .add(const DetermineAppStateRequested());
                       }
                       else if(state.status == SignupSubmissionStatus.error){
                         showCustomSnackBar(context, state.message,isError: true);

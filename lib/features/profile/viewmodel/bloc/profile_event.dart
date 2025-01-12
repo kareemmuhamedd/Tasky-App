@@ -10,3 +10,9 @@ abstract class ProfileEvent extends Equatable {
 final class ProfileDataRequested extends ProfileEvent {
   const ProfileDataRequested();
 }
+
+final class LogoutRequested extends ProfileEvent {
+  final String? refreshToken;
+
+  const LogoutRequested(this.refreshToken);
+}
