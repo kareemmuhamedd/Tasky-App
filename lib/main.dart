@@ -10,7 +10,7 @@ void main() async {
   await initDependencies();
   runApp(
     DevicePreview(
-      enabled: true,
+      enabled: false,
       builder: (context) => const App(),
     ),
   );

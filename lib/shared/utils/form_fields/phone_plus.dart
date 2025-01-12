@@ -59,7 +59,7 @@ class Phone extends FormzInput<String, PhoneNumberValidationError>
 
   @override
   Map<PhoneNumberValidationError?, String?> get validationErrorMessage => {
-        PhoneNumberValidationError.empty: 'This field is requiredkk',
+        PhoneNumberValidationError.empty: 'This field is required',
         PhoneNumberValidationError.unsupportedCountry:
             'Country code is not supported',
         PhoneNumberValidationError.invalidLength:
