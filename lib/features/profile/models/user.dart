@@ -43,6 +43,22 @@ class UserModel extends Equatable {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'displayName': displayName,
+      'username': username,
+      'roles': roles,
+      'active': active,
+      'experienceYears': experienceYears,
+      'address': address,
+      'level': level,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      '__v': v,
+    };
+  }
+
   UserModel copyWith({
     String? id,
     String? displayName,

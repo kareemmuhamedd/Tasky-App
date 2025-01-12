@@ -71,7 +71,7 @@ class LoginCubit extends Cubit<LoginState> {
       (failure) {
         emit(state.copyWith(
           status: LogInSubmissionStatus.error,
-          message: 'Invalid phone number or password',
+          message: failure.message,
         ));
         emit(state.copyWith(status: LogInSubmissionStatus.idle));
       },

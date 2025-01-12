@@ -1,13 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive/hive.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tasky_app/features/auth/login/repositories/login_remote_repository.dart';
 import 'package:tasky_app/features/auth/login/viewmodel/login_cubit/login_cubit.dart';
 import 'package:tasky_app/features/auth/signup/repositories/signup_remote_repository.dart';
 import 'package:tasky_app/features/auth/signup/viewmodel/signup_cubit/signup_cubit.dart';
 import 'package:tasky_app/features/create_task/viewmodel/bloc/create_task_bloc.dart';
-import 'package:tasky_app/features/home/repositories/home_repository.dart';
+import 'package:tasky_app/features/home/repositories/home_local_data_source.dart';
+import 'package:tasky_app/features/home/repositories/home_remote_repository.dart';
 import 'package:tasky_app/features/home/viewmodel/bloc/home_bloc.dart';
+import 'package:tasky_app/features/profile/repositories/profile_local_data_source.dart';
 import 'package:tasky_app/shared/networking/dio_factory.dart';
 
 import '../../features/create_task/repositories/create_task_repository.dart';
@@ -25,11 +29,29 @@ Future<void> initDependencies() async {
   /// Dio & ApiService
   Dio dio = DioFactory.getDio();
   serviceLocator.registerLazySingleton<Dio>(() => dio);
-  serviceLocator.registerFactory<InternetConnection>(() => InternetConnection());
+  /// Internet Connection
+  serviceLocator
+      .registerFactory<InternetConnection>(() => InternetConnection());
   serviceLocator.registerFactory<ConnectionChecker>(
     () => ConnectionCheckerImpl(
       serviceLocator<InternetConnection>(),
     ),
+  );
+  /// Hive initialization
+  Hive.defaultDirectory = (await getApplicationCacheDirectory()).path;
+
+  /// Open Hive boxes
+  var tasksBox = Hive.box(name: 'tasks');
+  var profileBox = Hive.box(name: 'profile');
+
+  /// Register Hive boxes in the service locator
+  serviceLocator.registerLazySingleton<Box>(
+    () => tasksBox,
+    instanceName: 'tasks',
+  );
+  serviceLocator.registerLazySingleton<Box>(
+    () => profileBox,
+    instanceName: 'profile',
   );
 
   /// CORE DEPENDENCIES REGISTRATION STARTS HERE
@@ -70,9 +92,16 @@ void _initAuthRegistration() {
 
 void _initHomeRegistration() {
   /// Register Repositories of Home
+  serviceLocator.registerFactory<TaskLocalDataSource>(
+    () => TaskLocalDataSourceImpl(
+      serviceLocator<Box>(instanceName: 'tasks'),
+    ),
+  );
   serviceLocator.registerFactory<HomeRemoteRepository>(
     () => HomeRemoteRepository(
       dio: serviceLocator<Dio>(),
+      connectionChecker: serviceLocator<ConnectionChecker>(),
+      taskLocalDataSource: serviceLocator<TaskLocalDataSource>(),
     ),
   );
 
@@ -113,9 +142,16 @@ void _initCreateTaskRegistration() {
 
 void _initProfileRegistration() {
   /// Register Repositories of Profile
+  serviceLocator.registerFactory<ProfileLocalDataSource>(
+    () => ProfileLocalDataSourceImpl(
+      serviceLocator<Box>(instanceName: 'profile'),
+    ),
+  );
   serviceLocator.registerFactory<ProfileRemoteRepository>(
     () => ProfileRemoteRepository(
       dio: serviceLocator<Dio>(),
+      connectionChecker: serviceLocator<ConnectionChecker>(),
+      profileLocalDataSource: serviceLocator<ProfileLocalDataSource>(),
     ),
   );
 

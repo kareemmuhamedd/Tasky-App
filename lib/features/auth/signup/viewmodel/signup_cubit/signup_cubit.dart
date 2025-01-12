@@ -154,7 +154,7 @@ class SignupCubit extends Cubit<SignupState> {
       (failure) {
         emit(state.copyWith(
           status: SignupSubmissionStatus.error,
-          message: 'This phone number is already registered with another user',
+          message: failure.message,
         ));
         emit(state.copyWith(status: SignupSubmissionStatus.idle));
       },

@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tasky_app/features/create_task/model/task_model.dart';
 import 'package:tasky_app/features/delete_task/repositories/delete_task_repository.dart';
-import 'package:tasky_app/features/home/repositories/home_repository.dart';
+import 'package:tasky_app/features/home/repositories/home_remote_repository.dart';
 
 part 'home_event.dart';
 

@@ -18,17 +18,24 @@ class TaskCircleImage extends StatelessWidget {
       height: 64,
       width: 64,
       decoration: BoxDecoration(
-        color: AppColors.lightOrangeColor,
         borderRadius: BorderRadius.circular(64),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(64),
         child: CachedNetworkImage(
           imageUrl: task.image,
+          placeholder: (context, url) => Container(
+            width: 64,
+            height: 64,
+            decoration: const BoxDecoration(
+              color: AppColors.lightPurpleColor,
+              shape: BoxShape.circle,
+            ),
+          ),
           errorWidget: (context, url, error) => const Icon(
             Icons.warning_rounded,
             color: AppColors.borderGreyColor,
-            size: 30,
+            size: 64,
           ),
           fit: BoxFit.cover,
         ),

@@ -1,7 +1,7 @@
 import '../../../features/create_task/model/task_model.dart';
 
 final dummyObject = TaskModel(
-  image: "https://via.placeholder.com/150",
+  image: "",
   // Placeholder image URL
   title: "Loading title...",
   // Placeholder title
