@@ -47,6 +47,11 @@ dependencies:
 #  hive: ^4.0.0-dev.2
 #  isar_flutter_libs: ^4.0.0-dev.13
   hive_flutter: ^1.1.0
+  image: ^4.5.2 # this used for image compress for desktop app
+  path: ^1.9.0
+  # for make app run on desktop with full screen
+  bitsdojo_window: ^0.1.6
+  window_manager: ^0.4.3
 
 dev_dependencies:
   flutter_test:

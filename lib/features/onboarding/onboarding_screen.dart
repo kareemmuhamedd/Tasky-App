@@ -14,50 +14,52 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Image.asset(AppImages.artImage),
-          const SizedBox(
-            height: 24,
-          ),
-          const Text(
-            'Task Management &\nTo-Do List',
-            style: AppTextStyles.font24WeightBold,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          const Text(
-            'This productive tool is designed to help\nyou better manage your task\nproject-wise conveniently!',
-            style: AppTextStyles.font14WeightRegular,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(
-            height: 35.5,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 22),
-            child: AppButton(
-              appButtonWidget: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Let\'s Start',
-                    style: AppTextStyles.font19WeightBold,
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  SvgPicture.asset(AppIcons.arrowLeftIcon),
-                ],
-              ),
-              onPressed: () {
-                context.read<AppBloc>().add(const CompleteOnboarding());
-              },
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Image.asset(AppImages.artImage),
+            const SizedBox(
+              height: 24,
             ),
-          )
-        ],
+            const Text(
+              'Task Management &\nTo-Do List',
+              style: AppTextStyles.font24WeightBold,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            const Text(
+              'This productive tool is designed to help\nyou better manage your task\nproject-wise conveniently!',
+              style: AppTextStyles.font14WeightRegular,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 35.5,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 22),
+              child: AppButton(
+                appButtonWidget: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Let\'s Start',
+                      style: AppTextStyles.font19WeightBold,
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    SvgPicture.asset(AppIcons.arrowLeftIcon),
+                  ],
+                ),
+                onPressed: () {
+                  context.read<AppBloc>().add(const CompleteOnboarding());
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

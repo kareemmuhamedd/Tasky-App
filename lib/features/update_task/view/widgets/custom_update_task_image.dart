@@ -7,7 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tasky_app/features/create_task/model/task_model.dart';
 import 'package:tasky_app/features/update_task/viewmodel/bloc/update_task_bloc.dart';
 import 'package:tasky_app/shared/theme/app_colors.dart';
+import 'package:tasky_app/shared/typography/app_font_weight.dart';
 import '../../../../shared/utils/files_picker/pick_image.dart';
+
 
 class CustomUpdateTaskImageWidget extends StatelessWidget {
   const CustomUpdateTaskImageWidget({
@@ -49,8 +51,10 @@ class CustomUpdateTaskImageWidget extends StatelessWidget {
             return Stack(
               children: [
                 Container(
+                  margin:
+                      EdgeInsets.symmetric(horizontal: kIsDesktop ? 120 : 0),
                   width: double.infinity,
-                  height: 225.h,
+                  height: kIsDesktop ? 500 : 225.h,
                   decoration: BoxDecoration(
                     color: AppColors.lightOrangeColor,
                     borderRadius: BorderRadius.circular(10),
@@ -65,8 +69,10 @@ class CustomUpdateTaskImageWidget extends StatelessWidget {
                 ),
                 Center(
                   child: Container(
+                    margin:
+                        EdgeInsets.symmetric(horizontal: kIsDesktop ? 120 : 0),
                     width: double.infinity,
-                    height: 225.h,
+                    height: kIsDesktop ? 500 : 225.h,
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(10),

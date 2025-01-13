@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
+
+final kIsDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 
 /// Namespace for Default App Font Weights
 abstract class AppFontWeight {

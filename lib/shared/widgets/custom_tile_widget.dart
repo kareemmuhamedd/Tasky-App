@@ -29,7 +29,7 @@ class CustomTileWidget extends StatelessWidget {
               onOptionSelected: onOptionSelected,
             ),
       child: Container(
-        height: 50.h,
+        height: 50,
         width: double.infinity,
         decoration: BoxDecoration(
           color: AppColors.lightPurpleColor,
