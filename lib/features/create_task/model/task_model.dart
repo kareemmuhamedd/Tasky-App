@@ -1,15 +1,29 @@
+import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
+part 'task_model.g.dart';
+
+@HiveType(typeId: 0)
 class TaskModel {
+  @HiveField(0)
   final String image;
+  @HiveField(1)
   final String title;
+  @HiveField(2)
   final String desc;
+  @HiveField(3)
   final String priority;
+  @HiveField(4)
   final String status;
+  @HiveField(5)
   final String userId;
+  @HiveField(6)
   final String id;
+  @HiveField(7)
   final DateTime createdAt;
+  @HiveField(8)
   final DateTime updatedAt;
+  @HiveField(9)
   final int version;
 
   TaskModel({

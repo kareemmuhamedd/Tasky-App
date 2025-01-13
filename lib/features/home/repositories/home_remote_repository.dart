@@ -23,7 +23,7 @@ class HomeRemoteRepository {
   Future<Either<Failure, List<TaskModel>>> getTasks(int page) async {
     try {
       if (!await (_connectionChecker.isConnected)) {
-        final tasks = _taskLocalDataSource.loadTasks();
+        final tasks = await _taskLocalDataSource.loadTasks();
         return Right(tasks);
       }
       final response = await _dio.get(
@@ -39,9 +39,11 @@ class HomeRemoteRepository {
       _taskLocalDataSource.uploadLocalTasks(tasks: tasks);
       return Right(tasks);
     } on DioException catch (dioError) {
+      print(dioError);
       final errorMessage = CustomErrorHandler.handleDioError(dioError);
       return Left(Failure(message: errorMessage));
     } catch (error) {
+      print(error);
       final errorMessage = CustomErrorHandler.handleError(error);
       return Left(Failure(message: errorMessage));
     }

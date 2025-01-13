@@ -22,11 +22,12 @@ class ProfileRemoteRepository {
   Future<Either<Failure, UserModel>> getUserProfile() async {
     try {
       if (!await (_connectionChecker.isConnected)) {
-        final user = _profileLocalDataSource.loadProfile();
+        final user = await _profileLocalDataSource.loadProfile();
         if (user == null) {
           return Left(Failure(message: 'No internet connection'));
+        } else {
+          return Right(user);
         }
-        return Right(user);
       }
       final response = await _dio.get(
         '${ApiConstants.baseUrl}/auth/profile',

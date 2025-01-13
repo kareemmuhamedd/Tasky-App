@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:tasky_app/features/auth/login/repositories/login_remote_repository.dart';
 import 'package:tasky_app/features/auth/login/viewmodel/login_cubit/login_cubit.dart';
 import 'package:tasky_app/features/auth/signup/repositories/signup_remote_repository.dart';
@@ -14,8 +13,10 @@ import 'package:tasky_app/features/home/viewmodel/bloc/home_bloc.dart';
 import 'package:tasky_app/features/profile/repositories/profile_local_data_source.dart';
 import 'package:tasky_app/shared/networking/dio_factory.dart';
 
+import '../../features/create_task/model/task_model.dart';
 import '../../features/create_task/repositories/create_task_repository.dart';
 import '../../features/delete_task/repositories/delete_task_repository.dart';
+import '../../features/profile/models/user.dart';
 import '../../features/profile/repositories/profile_remote_repository.dart';
 import '../../features/profile/viewmodel/bloc/profile_bloc.dart';
 import '../../features/task_details/viewmodel/bloc/task_details_bloc.dart';
@@ -29,30 +30,21 @@ Future<void> initDependencies() async {
   /// Dio & ApiService
   Dio dio = DioFactory.getDio();
   serviceLocator.registerLazySingleton<Dio>(() => dio);
+
   /// Internet Connection
-  serviceLocator
-      .registerFactory<InternetConnection>(() => InternetConnection());
+  serviceLocator.registerFactory<InternetConnection>(
+    () => InternetConnection(),
+  );
   serviceLocator.registerFactory<ConnectionChecker>(
     () => ConnectionCheckerImpl(
       serviceLocator<InternetConnection>(),
     ),
   );
-  /// Hive initialization
-  Hive.defaultDirectory = (await getApplicationCacheDirectory()).path;
 
-  /// Open Hive boxes
-  var tasksBox = Hive.box(name: 'tasks');
-  var profileBox = Hive.box(name: 'profile');
-
-  /// Register Hive boxes in the service locator
-  serviceLocator.registerLazySingleton<Box>(
-    () => tasksBox,
-    instanceName: 'tasks',
-  );
-  serviceLocator.registerLazySingleton<Box>(
-    () => profileBox,
-    instanceName: 'profile',
-  );
+  /// Hive Database Initialization
+  await Hive.initFlutter();
+  Hive.registerAdapter(TaskModelAdapter());
+  Hive.registerAdapter(UserModelAdapter());
 
   /// CORE DEPENDENCIES REGISTRATION STARTS HERE
   _initAuthRegistration();
@@ -93,9 +85,7 @@ void _initAuthRegistration() {
 void _initHomeRegistration() {
   /// Register Repositories of Home
   serviceLocator.registerFactory<TaskLocalDataSource>(
-    () => TaskLocalDataSourceImpl(
-      serviceLocator<Box>(instanceName: 'tasks'),
-    ),
+    () => TaskLocalDataSourceImpl(),
   );
   serviceLocator.registerFactory<HomeRemoteRepository>(
     () => HomeRemoteRepository(
@@ -143,9 +133,7 @@ void _initCreateTaskRegistration() {
 void _initProfileRegistration() {
   /// Register Repositories of Profile
   serviceLocator.registerFactory<ProfileLocalDataSource>(
-    () => ProfileLocalDataSourceImpl(
-      serviceLocator<Box>(instanceName: 'profile'),
-    ),
+    () => ProfileLocalDataSourceImpl(),
   );
   serviceLocator.registerFactory<ProfileRemoteRepository>(
     () => ProfileRemoteRepository(

@@ -1,35 +1,55 @@
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 import '../models/user.dart';
 
 abstract interface class ProfileLocalDataSource {
-  void uploadLocalProfile({
+  Future<void> uploadLocalProfile({
     required UserModel profile,
   });
 
-  UserModel?
-      loadProfile(); // Changed to return `UserModel?` to handle nulls safely
+  Future<UserModel?> loadProfile();
 }
 
 class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
-  final Box box;
+  static const String _boxName = 'profile';
 
-  ProfileLocalDataSourceImpl(this.box);
-
-  @override
-  UserModel? loadProfile() {
-    // Fetch the profile JSON from Hive
-    final profileJson = box.get('profile');
-    if (profileJson != null) {
-      // Parse the JSON into a UserModel
-      return UserModel.fromJson(profileJson);
+  /// Open the Hive box, perform the action, and close it.
+  Future<void> _withBox(
+    Future<void> Function(Box<UserModel> box) action,
+  ) async {
+    final box = await Hive.openBox<UserModel>(_boxName);
+    try {
+      await action(box);
+    } finally {
+      await box.close();
     }
-    // Return null if no profile is found
-    return null;
+  }
+
+  /// Open the Hive box, perform the action, and close it, returning a result.
+  Future<T> _withBoxResult<T>(
+    Future<T> Function(Box<UserModel> box) action,
+  ) async {
+    final box = await Hive.openBox<UserModel>(_boxName);
+    try {
+      return await action(box);
+    } finally {
+      await box.close();
+    }
   }
 
   @override
-  void uploadLocalProfile({required UserModel profile}) {
-    // Save the profile as JSON in Hive
-    box.put('profile', profile.toJson());
+  Future<void> uploadLocalProfile({required UserModel profile}) async {
+    await _withBox((box) async {
+      await box.clear(); // Clear any existing profile data.
+      await box.put('user_profile', profile);
+    });
+  }
+
+  @override
+  Future<UserModel?> loadProfile() async {
+    return _withBoxResult((box) async {
+      final profile = box.get('user_profile');
+      return profile;
+    });
   }
 }
